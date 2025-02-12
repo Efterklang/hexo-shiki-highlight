@@ -99,7 +99,6 @@ const addHighlightTool = function () {
     if (!codeElement) return;
     copy(codeElement.innerText, clickEle.previousElementSibling);
     $buttonParent.classList.remove('copy-true');
-
   };
 
   const highlightShrinkFn = (ele) => {

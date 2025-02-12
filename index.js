@@ -22,7 +22,8 @@ if (!config) return;
 const language_aliases = new Map(Object.entries(config.language_aliases || {}));
 
 const {
-  theme,
+  theme_light,
+  theme_dark,
   line_number,
   highlight_linenumber_toggle,
   highlight_wrap_toggle,
@@ -42,7 +43,7 @@ const css = hexo.extend.helper.get("css").bind(hexo);
 const js = hexo.extend.helper.get("js").bind(hexo);
 
 hexo.extend.injector.register('head_end', () => { return css("https://cdn.jsdelivr.net/gh/Efterklang/hexo-shiki-highlight@main/code_block/code_block.css") });
-hexo.extend.injector.register('body_end', () => { return js("https://cdn.jsdelivr.net/gh/Efterklang/hexo-shiki-highlight@main/code_block/code_block.css") });
+hexo.extend.injector.register('body_end', () => { return js("https://cdn.jsdelivr.net/gh/Efterklang/hexo-shiki-highlight@main/code_block/code_block.js") });
 
 if (config.highlight_height_limit) {
   hexo.extend.injector.register("head_end", () => {
@@ -86,7 +87,11 @@ initializeHighlighter().then((hl) => {
   if (!hl) return;
 
   // 获取当前主题
-  const currentTheme = theme || "catppuccin-mocha"; // 默认主题
+  if (localStorage.getItem('night')) {
+    const currentTheme = theme_dark || "catppuccin-mocha"; // 默认主题
+  } else {
+    const currentTheme = theme_light || "catppuccin-latte"
+  }
   const themeInfo = hl.getTheme(currentTheme);
   console.log(themeInfo.type);
 

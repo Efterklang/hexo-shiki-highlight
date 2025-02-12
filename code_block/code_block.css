@@ -27,20 +27,20 @@ figure.shiki {
 }
 
 .shiki-tools {
-  border-radius: 8px 8px 0 0; /* 设置上方圆角 */
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* 左右对齐 */
-  padding-left: 2px;
-  padding-right: 2px;
-  overflow: hidden;
-  min-height: 24px;
-  height: 0.9em;
-  background: var(--hltools-bg);
-  color: var(--hltools-color);
-  font-size: 0.9em;
-  user-select: none;
+    border-radius: 35px 35px 0 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 15px;
+    padding-right: 15px;
+    overflow: hidden;
+    min-height: 30px;
+    height: 0.9em;
+    background: var(--hltools-bg);
+    color: var(--hltools-color);
+    font-size: 1em;
+    user-select: none;
 }
 
 /* 左对齐部分 */
@@ -213,7 +213,6 @@ figure.shiki div.codeblock div {
 }
 
 figure.shiki .gutter pre {
-  border-right: 1px solid var(--hlnumber-color) !important;
   border-radius: 0 !important;
   padding-right: 8px !important;
   padding-left: 8px !important;
