@@ -1,6 +1,6 @@
 {
-  "name": "hexo-plugin-shiki",
-  "version": "1.0.0",
+  "name": "hexo-shiki-hl",
+  "version": "1.1.1",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -15,7 +15,7 @@ figure.shiki .shiki-tools.closed ~ * {
 
 figure.shiki {
   margin: 0 0 24px;
-  border-radius: 0 !important;
+  border-radius: 8px !important;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   position: relative;
@@ -27,6 +27,7 @@ figure.shiki {
 }
 
 .shiki-tools {
+  border-radius: 8px 8px 0 0; /* 设置上方圆角 */
   position: relative;
   display: flex;
   align-items: center;
@@ -203,7 +204,7 @@ figure.shiki div.codeblock {
   overflow: auto;
   border: none;
   display: flex;
-  border-radius: 0 !important;
+  border-radius: 0 0 8px 8px !important;
 }
 
 figure.shiki div.codeblock div {

@@ -37,45 +37,12 @@ const {
   exclude_languages: []
 } = config;
 
-const path = require('path');
-const fs = require('fs');
-// 获取插件的根目录
-const pluginDir = path.dirname(require.resolve('hexo-plugin-shiki'));
-// 将插件的静态文件复制到 Hexo 的 source 目录
-hexo.on('generateBefore', () => {
-  const sourceDir = hexo.source_dir;
-  const targetDir = path.join(sourceDir, 'code_block');
-  // 确保目标目录存在
-  if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(targetDir);
-  }
-  // 复制 CSS 文件
-  const cssSourcePath = path.join(pluginDir, 'code_block', 'code_block.css');
-  const cssTargetPath = path.join(targetDir, 'code_block.css');
-  if (fs.existsSync(cssSourcePath)) {
-    fs.copyFileSync(cssSourcePath, cssTargetPath);
-  } else {
-    hexo.log.error(`CSS file not found: ${cssSourcePath}`);
-  }
-  // 复制 JavaScript 文件
-  const jsSourcePath = path.join(pluginDir, 'code_block', 'code_block.js');
-  const jsTargetPath = path.join(targetDir, 'code_block.js');
-  if (fs.existsSync(jsSourcePath)) {
-    fs.copyFileSync(jsSourcePath, jsTargetPath);
-  } else {
-    hexo.log.error(`JavaScript file not found: ${jsSourcePath}`);
-  }
-});
-// 注册 CSS 文件注入器
-hexo.extend.injector.register('head_end', () => {
-  const cssPath = path.join(hexo.config.root, 'code_block/code_block.css');
-  return `<link rel="stylesheet" href="${cssPath}">`;
-});
-// 注册 JavaScript 文件注入器
-hexo.extend.injector.register('body_end', () => {
-  const jsPath = path.join(hexo.config.root, 'code_block/code_block.js');
-  return `<script src="${jsPath}"></script>`;
-});
+
+const css = hexo.extend.helper.get("css").bind(hexo);
+const js = hexo.extend.helper.get("js").bind(hexo);
+
+hexo.extend.injector.register('head_end', () => { return css("https://cdn.jsdelivr.net/gh/Efterklang/hexo-shiki-highlight@main/code_block/code_block.css") });
+hexo.extend.injector.register('body_end', () => { return js("https://cdn.jsdelivr.net/gh/Efterklang/hexo-shiki-highlight@main/code_block/code_block.css") });
 
 if (config.highlight_height_limit) {
   hexo.extend.injector.register("head_end", () => {
@@ -110,6 +77,7 @@ hexo.extend.injector.register("body_end", () => {
       error: '${error}',
     }
   };
+  console.log("hexo shiki highlight loaded");
   </script>
   `;
 });
@@ -120,7 +88,7 @@ initializeHighlighter().then((hl) => {
   // 获取当前主题
   const currentTheme = theme || "catppuccin-mocha"; // 默认主题
   const themeInfo = hl.getTheme(currentTheme);
-  // console.log(themeInfo.type);
+  console.log(themeInfo.type);
 
   // 将主题的所有变量注入到 CSS 的 :root 中
   hexo.extend.injector.register("head_end", () => {
