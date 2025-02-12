@@ -88,8 +88,6 @@ initializeHighlighter().then((hl) => {
   // 获取当前主题
   const currentTheme = theme || "catppuccin-mocha"; // 默认主题
   const themeInfo = hl.getTheme(currentTheme);
-  console.log(themeInfo.type);
-
   // 将主题的所有变量注入到 CSS 的 :root 中
   hexo.extend.injector.register("head_end", () => {
     return `
