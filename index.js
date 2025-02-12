@@ -96,8 +96,8 @@ initializeHighlighter().then((hl) => {
       <style>
         :root {
           /* 基本颜色 */
-          --hl-code-bg: ${themeInfo.bg};
-          --hl-code-fg: ${themeInfo.fg};
+          --hl-bg: ${themeInfo.bg};
+          --hl-color: ${themeInfo.fg};
           --hl-code-type: ${themeInfo.type};
 
           /* 主题名称 */
