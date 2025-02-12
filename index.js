@@ -22,8 +22,7 @@ if (!config) return;
 const language_aliases = new Map(Object.entries(config.language_aliases || {}));
 
 const {
-  theme_light,
-  theme_dark,
+  theme,
   line_number,
   highlight_linenumber_toggle,
   highlight_wrap_toggle,
@@ -87,11 +86,7 @@ initializeHighlighter().then((hl) => {
   if (!hl) return;
 
   // 获取当前主题
-  if (localStorage.getItem('night')) {
-    const currentTheme = theme_dark || "catppuccin-mocha"; // 默认主题
-  } else {
-    const currentTheme = theme_light || "catppuccin-latte"
-  }
+  const currentTheme = theme || "catppuccin-mocha"; // 默认主题
   const themeInfo = hl.getTheme(currentTheme);
   console.log(themeInfo.type);
 
