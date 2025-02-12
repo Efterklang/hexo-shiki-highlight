@@ -1,0 +1,16 @@
+{
+  "name": "hexo-plugin-shiki",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "hexo": "^7.3.0",
+    "shiki": "^1.29.1"
+  }
+}
