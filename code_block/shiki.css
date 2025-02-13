@@ -24,6 +24,7 @@ figure.shiki {
   background: var(--hl-bg);
   color: var(--hl-color);
   line-height: 1.6;
+  border: 2px solid var(--hl-border-color); /* 设置边框颜色 */
 }
 
 .shiki-tools {
@@ -265,6 +266,7 @@ figure.shiki .code pre {
 figure.shiki.code-fullpage {
   background: var(--hl-bg);
   color: var(--hl-color);
+  border: 2px solid var(--hl-border-color); /* 设置边框颜色 */
 }
 
 /* 退出全屏按钮 */
