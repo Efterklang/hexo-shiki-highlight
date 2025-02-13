@@ -1,4 +1,8 @@
-# Refs
+## Install
+
+`bun i hexo-shiki-highlight --save`
+
+## Refs
 
 - [github.com/nova1751/hexo-shiki-plugin](https://github.com/nova1751/hexo-shiki-plugin)
 - [github.com/HPCesia/hexo-highlighter-shiki](https://github.com/HPCesia/hexo-highlighter-shiki)
