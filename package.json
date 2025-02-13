@@ -1,12 +1,14 @@
 {
-  "name": "hexo-shiki-hl",
-  "version": "1.2.2",
+  "name": "hexo-shiki-highlight",
+  "version": "1.0.0",
   "main": "index.js",
+  "keywords": [
+    "hexo",
+    "hexo-plugin"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "type": "module",
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",

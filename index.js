@@ -41,8 +41,8 @@ const {
 const css = hexo.extend.helper.get("css").bind(hexo);
 const js = hexo.extend.helper.get("js").bind(hexo);
 
-hexo.extend.injector.register('head_end', () => { return css("https://cdn.jsdelivr.net/gh/Efterklang/hexo-shiki-highlight@main/code_block/code_block.css") });
-hexo.extend.injector.register('body_end', () => { return js("https://cdn.jsdelivr.net/gh/Efterklang/hexo-shiki-highlight@main/code_block/code_block.js") });
+hexo.extend.injector.register('head_end', () => { return css("https://cdn.jsdelivr.net/npm/hexo-shiki-highlight/code_block/shiki.css") });
+hexo.extend.injector.register('body_end', () => { return js("https://cdn.jsdelivr.net/npm/hexo-shiki-highlight/code_block/shiki.css") });
 
 if (config.highlight_height_limit) {
   hexo.extend.injector.register("head_end", () => {
