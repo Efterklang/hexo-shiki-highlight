@@ -371,7 +371,6 @@ const addHighlightTool = function () {
       const leftContainer = document.createElement("div");
       leftContainer.className = "left";
       leftContainer.innerHTML =
-        '<div class="traffic-lights"><span class="traffic-light traffic-light-close"></span><span class="traffic-light traffic-light-minimize"></span><span class="traffic-light traffic-light-maximize"></span></div>' +
         highlightLineNumberToggleEle + highlightWrapToggleEle + (highlightLang ? lang : "");
 
       // 创建居中部分
