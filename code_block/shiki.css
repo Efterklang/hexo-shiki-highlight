@@ -3,14 +3,13 @@ figure.shiki div.codeblock::-webkit-scrollbar-thumb {
   background: var(--hlscrollbar-bg);
   border-radius: 2.5px;
 }
-
 figure.shiki div.codeblock::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
 /* code block figure */
-figure.shiki .shiki-tools.closed~* {
+figure.shiki .shiki-tools.closed ~ * {
   display: none;
 }
 
@@ -25,111 +24,32 @@ figure.shiki {
   background: var(--hl-bg);
   color: var(--hl-color);
   line-height: 1.6;
-  border: 2px solid var(--hl-border-color);
-  /* 设置边框颜色 */
+  border: 2px solid var(--hl-border-color); /* 设置边框颜色 */
 }
 
 .shiki-tools {
-  border-radius: 35px 35px 0 0;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 15px;
-  padding-right: 15px;
-  overflow: hidden;
-  min-height: 30px;
-  height: 0.9em;
-  background: var(--hltools-bg);
-  color: var(--hltools-color);
-  font-size: 1em;
-  user-select: none;
+    border-radius: 35px 35px 0 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 15px;
+    padding-right: 15px;
+    overflow: hidden;
+    min-height: 30px;
+    height: 0.9em;
+    background: var(--hltools-bg);
+    color: var(--hltools-color);
+    font-size: 1em;
+    user-select: none;
 }
 
 /* 左对齐部分 */
 .shiki-tools .left {
   display: flex;
   align-items: center;
-/* macOS traffic lights */
-.shiki-tools .left .traffic-light {
-  display: flex; /* For centering content if any, or for consistency */
-  align-items: center;
-  justify-content: center;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  /* margin-right is not needed if parent .left's gap:5px handles spacing */
-  border: 0.5px solid rgba(0, 0, 0, 0.15); /* Subtle border */
-  box-sizing: border-box;
-  cursor: pointer;
-  position: relative; /* For pseudo-element positioning */
-}
-
-.shiki-tools .left .traffic-light::before {
-  content: ""; /* Placeholder, specific content set on hover */
-  font-family: "Helvetica Neue", Arial, sans-serif; /* Ensure symbols render well */
-  font-size: 9px;
-  font-weight: 600; /* Slightly bolder for symbols */
-  line-height: 12px; /* Match height for vertical centering */
-  text-align: center;
-  color: transparent; /* Symbol color, revealed on hover */
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0; /* Hidden by default */
-  transition: opacity 0.1s ease-in-out, color 0.1s ease-in-out; /* Smooth transition */
-}
-
-.shiki-tools .left .traffic-light-close {
-  background-color: #ff5f57; /* Red */
-}
-.shiki-tools .left .traffic-light-close:hover::before {
-  content: '✕'; /* macOS close symbol */
-  color: #5e1e1a; /* Darker red for symbol */
-  opacity: 1;
-}
-
-.shiki-tools .left .traffic-light-minimize {
-  background-color: #ffbd2e; /* Yellow */
-}
-.shiki-tools .left .traffic-light-minimize:hover::before {
-  content: '−'; /* macOS minimize symbol */
-  color: #694a09; /* Darker yellow for symbol */
-  opacity: 1;
-}
-
-.shiki-tools .left .traffic-light-maximize {
-  background-color: #28c93f; /* Green */
-}
-.shiki-tools .left .traffic-light-maximize:hover::before {
-  content: '+'; /* macOS maximize symbol */
-  color: #0f4b1a; /* Darker green for symbol */
-  opacity: 1;
-}
-
-/*
-  Note: The .shiki-tools .left container already has 'display: flex;' and 'gap: 5px;'.
-  If the HTML for these traffic lights places them as direct children at the
-  beginning of the .shiki-tools .left container, the 'gap: 5px;' will
-  automatically handle spacing between the traffic lights themselves and
-  between the last traffic light and subsequent elements.
-  Example HTML structure:
-  <div class="shiki-tools">
-    <div class="left">
-      <span class="traffic-light traffic-light-close"></span>
-      <span class="traffic-light traffic-light-minimize"></span>
-      <span class="traffic-light traffic-light-maximize"></span>
-      <!-- Other existing icons like line number toggle, wrap toggle -->
-    </div>
-    ...
-  </div>
-*/
-  gap: 5px;
-  /* 左对齐元素之间的间隔 */
-  flex-shrink: 0;
-  /* 禁止缩小 */
+  gap: 5px; /* 左对齐元素之间的间隔 */
+  flex-shrink: 0; /* 禁止缩小 */
 }
 
 /* 居中部分 */
@@ -137,22 +57,17 @@ figure.shiki {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
-  /* 占据剩余空间 */
-  overflow: hidden;
-  /* 防止内容溢出 */
-  min-width: 0;
-  /* 允许内容缩小 */
+  flex-grow: 1; /* 占据剩余空间 */
+  overflow: hidden; /* 防止内容溢出 */
+  min-width: 0; /* 允许内容缩小 */
 }
 
 /* 右对齐部分 */
 .shiki-tools .right {
   display: flex;
   align-items: center;
-  gap: 10px;
-  /* 右对齐元素之间的间隔 */
-  flex-shrink: 0;
-  /* 禁止缩小 */
+  gap: 10px; /* 右对齐元素之间的间隔 */
+  flex-shrink: 0; /* 禁止缩小 */
 }
 
 .shiki-tools .copy-button,
@@ -177,15 +92,11 @@ figure.shiki {
     color 0.3s,
     transform 0.3s ease;
 }
-
 .shiki-tools .expand.closed {
-  transform: rotate(90deg);
-  /* 初始旋转 */
+  transform: rotate(90deg); /* 初始旋转 */
 }
-
 .shiki-tools .expand.closed:hover {
-  transform: rotate(90deg);
-  /* hover 时旋转 + 放大 */
+  transform: rotate(90deg); /* hover 时旋转 + 放大 */
 }
 
 /* hover 效果 */
@@ -203,23 +114,18 @@ figure.shiki {
   color: #89b4fa;
   z-index: 1000;
   opacity: 0;
-  position: absolute;
-  /* 使用绝对定位 */
-  white-space: nowrap;
-  /* 防止换行 */
-  transition: opacity 0.2s ease;
-  /* 过渡效果 */
+  position: absolute; /* 使用绝对定位 */
+  white-space: nowrap; /* 防止换行 */
+  transition: opacity 0.2s ease; /* 过渡效果 */
   transform: translateX(-110%);
   padding-left: 5px;
   padding-right: 0px;
-  background: var(--hltools-bg);
-  /* 背景色与工具栏一致 */
+  background: var(--hltools-bg); /* 背景色与工具栏一致 */
 }
 
 .shiki-tools .copy-notice[style*="opacity: 1"] {
   opacity: 1;
-  visibility: visible;
-  /* 显示时设置为可见 */
+  visibility: visible; /* 显示时设置为可见 */
 }
 
 /* 标题样式 */
@@ -229,16 +135,11 @@ figure.shiki {
   padding-left: 10px;
   padding-right: 10px;
   color: var(--hltools-color);
-  user-select: text;
-  /* 允许用户选择文本 */
-  white-space: nowrap;
-  /* 防止换行 */
-  overflow: hidden;
-  /* 超出部分隐藏 */
-  text-overflow: ellipsis;
-  /* 超出部分显示省略号 */
-  flex-shrink: 1;
-  /* 允许标题缩小 */
+  user-select: text; /* 允许用户选择文本 */
+  white-space: nowrap; /* 防止换行 */
+  overflow: hidden; /* 超出部分隐藏 */
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  flex-shrink: 1; /* 允许标题缩小 */
 }
 
 /* 语言标签样式 */
@@ -279,11 +180,9 @@ figure.shiki:hover .shiki-tools .code-lang {
   0% {
     opacity: 0.6;
   }
-
   50% {
     opacity: 0.1;
   }
-
   100% {
     opacity: 0.6;
   }
@@ -295,7 +194,7 @@ figure.shiki:hover .shiki-tools .code-lang {
   animation: code-expand-key 1.2s infinite;
 }
 
-.code-expand-btn.expand-done>i {
+.code-expand-btn.expand-done > i {
   transform: rotate(180deg);
 }
 
@@ -351,15 +250,15 @@ figure.shiki .code pre {
   background: none !important;
 }
 
-.code-expand-btn:not(.expand-done)~pre,
-.code-expand-btn:not(.expand-done)~*pre {
+.code-expand-btn:not(.expand-done) ~ pre,
+.code-expand-btn:not(.expand-done) ~ *pre {
   overflow: hidden;
 }
 
-.code-expand-btn.expand-done+pre,
-.code-expand-btn.expand-done+* pre,
-.code-expand-btn.expand-done+div.codeblock,
-.code-expand-btn.expand-done+* div.codeblock {
+.code-expand-btn.expand-done + pre,
+.code-expand-btn.expand-done + * pre,
+.code-expand-btn.expand-done + div.codeblock,
+.code-expand-btn.expand-done + * div.codeblock {
   margin-bottom: 1.8em;
 }
 
@@ -367,8 +266,7 @@ figure.shiki .code pre {
 figure.shiki.code-fullpage {
   background: var(--hl-bg);
   color: var(--hl-color);
-  border: 2px solid var(--hl-border-color);
-  /* 设置边框颜色 */
+  border: 2px solid var(--hl-border-color); /* 设置边框颜色 */
 }
 
 /* 退出全屏按钮 */
