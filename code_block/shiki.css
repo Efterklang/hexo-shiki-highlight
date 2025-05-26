@@ -1,211 +1,241 @@
-/* scrollbar */
-figure.shiki div.codeblock::-webkit-scrollbar-thumb {
-  background: var(--hlscrollbar-bg);
-  border-radius: 2.5px;
-}
+/* ===== SCROLLBAR STYLES ===== */
 figure.shiki div.codeblock::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
-/* code block figure */
-figure.shiki .shiki-tools.closed ~ * {
-  display: none;
+figure.shiki div.codeblock::-webkit-scrollbar-thumb {
+  background: var(--hlscrollbar-bg);
+  border-radius: 2.5px;
 }
 
+/* ===== MAIN CODE BLOCK FIGURE ===== */
 figure.shiki {
   margin: 0 0 24px;
-  border-radius: 8px !important;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  position: relative;
-  overflow: auto;
   padding: 0;
+  border-radius: 8px !important;
+  border: #313244 1.5px solid;
   background: var(--hl-bg);
   color: var(--hl-color);
   line-height: 1.6;
-  border: 2px solid var(--hl-border-color); /* 设置边框颜色 */
+  position: relative;
+  overflow: auto;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
+/* Hide content when toolbar is closed */
+figure.shiki .shiki-tools.closed~* {
+  display: none;
+}
+
+/* ===== TOOLBAR STYLES ===== */
 .shiki-tools {
-    border-radius: 35px 35px 0 0;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: 15px;
-    padding-right: 15px;
-    overflow: hidden;
-    min-height: 30px;
-    height: 0.9em;
-    background: var(--hltools-bg);
-    color: var(--hltools-color);
-    font-size: 1em;
-    user-select: none;
-}
-
-/* 左对齐部分 */
-.shiki-tools .left {
   display: flex;
   align-items: center;
-  gap: 5px; /* 左对齐元素之间的间隔 */
-  flex-shrink: 0; /* 禁止缩小 */
+  justify-content: space-between;
+  min-height: 30px;
+  height: 0.9em;
+  padding: 0 15px;
+  border-radius: 35px 35px 0 0;
+  background: var(--hltools-bg);
+  color: var(--hltools-color);
+  font-size: 1em;
+  user-select: none;
+  overflow: hidden;
+  position: relative;
 }
 
-/* 居中部分 */
+/* Toolbar sections */
+.shiki-tools .left,
+.shiki-tools .right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.shiki-tools .left {
+  gap: 5px;
+}
+
+.shiki-tools .right {
+  gap: 10px;
+}
+
 .shiki-tools .center {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 1; /* 占据剩余空间 */
-  overflow: hidden; /* 防止内容溢出 */
-  min-width: 0; /* 允许内容缩小 */
+  flex-grow: 1;
+  overflow: hidden;
+  min-width: 0;
 }
 
-/* 右对齐部分 */
-.shiki-tools .right {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* 右对齐元素之间的间隔 */
-  flex-shrink: 0; /* 禁止缩小 */
-}
-
+/* ===== INTERACTIVE ELEMENTS ===== */
 .shiki-tools .copy-button,
 .shiki-tools .raw-button,
-.shiki-tools .fullpage-button,
 .shiki-tools .fa-list-ol,
 .shiki-tools .fa-arrow-down-wide-short,
 .shiki-tools .expand {
   cursor: pointer;
-  transition:
-    color 0.3s,
-    transform 0.3s ease;
+  transition: color 0.3s, transform 0.3s ease;
 }
 
-/* 单独给 expand 按钮设置大一点 */
 .shiki-tools .expand {
-  cursor: pointer;
   font-size: 1.2em;
-  /* 因为 expand变大了，所以需要把左边界收一点 */
   margin-left: -2px;
-  transition:
-    color 0.3s,
-    transform 0.3s ease;
-}
-.shiki-tools .expand.closed {
-  transform: rotate(90deg); /* 初始旋转 */
-}
-.shiki-tools .expand.closed:hover {
-  transform: rotate(90deg); /* hover 时旋转 + 放大 */
 }
 
-/* hover 效果 */
+.shiki-tools .expand.closed {
+  transform: rotate(90deg);
+}
+
+/* Hover effects */
 .shiki-tools .copy-button:hover,
 .shiki-tools .raw-button:hover,
-.shiki-tools .fullpage-button:hover,
 .shiki-tools .fa-list-ol:hover,
 .shiki-tools .fa-arrow-down-wide-short:hover,
 .shiki-tools .expand:hover {
   color: #89b4fa;
-  /* transform: scale(1.2); */
 }
 
+/* ===== COPY NOTICE ===== */
 .shiki-tools .copy-notice {
+  position: absolute;
   color: #89b4fa;
-  z-index: 1000;
+  background: var(--hltools-bg);
+  white-space: nowrap;
   opacity: 0;
-  position: absolute; /* 使用绝对定位 */
-  white-space: nowrap; /* 防止换行 */
-  transition: opacity 0.2s ease; /* 过渡效果 */
+  visibility: hidden;
+  z-index: 1000;
+  padding: 0 5px 0 0;
   transform: translateX(-110%);
-  padding-left: 5px;
-  padding-right: 0px;
-  background: var(--hltools-bg); /* 背景色与工具栏一致 */
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .shiki-tools .copy-notice[style*="opacity: 1"] {
   opacity: 1;
-  visibility: visible; /* 显示时设置为可见 */
+  visibility: visible;
 }
 
-/* 标题样式 */
+/* ===== TITLE AND LANGUAGE STYLES ===== */
 .shiki-tools .code-title {
   font-size: 0.9em;
   font-weight: 500;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 0 10px;
   color: var(--hltools-color);
-  user-select: text; /* 允许用户选择文本 */
-  white-space: nowrap; /* 防止换行 */
-  overflow: hidden; /* 超出部分隐藏 */
-  text-overflow: ellipsis; /* 超出部分显示省略号 */
-  flex-shrink: 1; /* 允许标题缩小 */
+  user-select: text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
 }
 
-/* 语言标签样式 */
 .shiki-tools .code-lang {
   padding-left: 5px;
-  visibility: hidden;
-  opacity: 0;
-  transition:
-    opacity 0.4s ease,
-    visibility 0.4s ease;
-  font-weight: 500;
   font-size: 0.9em;
+  font-weight: 500;
+  opacity: 0;
+  visibility: hidden;
   user-select: none;
-  /* user-select: text; */
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 figure.shiki:hover .shiki-tools .code-lang {
-  visibility: visible;
   opacity: 1;
+  visibility: visible;
 }
 
-/* bottom toolbar */
+/* ===== TRAFFIC LIGHTS ===== */
+.shiki-tools .left .traffic-lights {
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+  margin-left: -7px;
+}
+
+.traffic-light {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 8px;
+  background-color: #ddd;
+  position: relative;
+}
+
+.traffic-light.red {
+  background-color: #f38ba8;
+}
+
+.traffic-light.yellow {
+  background-color: #fab387;
+}
+
+.traffic-light.green {
+  background-color: #a6e3a1;
+}
+
+/* Traffic light hover icons */
+.traffic-light::after {
+  content: "";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+  font-size: 9px;
+  font-family: "Lucida Grande", "Segoe UI", sans-serif;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* ===== EXPAND BUTTON ===== */
 .code-expand-btn {
   position: absolute;
-  display: flex;
   bottom: 0;
-  z-index: 1000;
   width: 100%;
-  background: var(--hlexpand-bg);
+  z-index: 1000;
+  display: flex;
   justify-content: center;
   align-items: center;
+  background: var(--hlexpand-bg);
   font-size: 1em;
-
   cursor: pointer;
-}
-
-@keyframes code-expand-key {
-  0% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 0.1;
-  }
-  100% {
-    opacity: 0.6;
-  }
 }
 
 .code-expand-btn i {
   padding: 6px 0;
   color: var(--hlnumber-color);
-  animation: code-expand-key 1.2s infinite;
+  animation: code-expand-pulse 1.2s infinite;
 }
 
-.code-expand-btn.expand-done > i {
+.code-expand-btn.expand-done>i {
   transform: rotate(180deg);
 }
 
-/* codeblock */
+@keyframes code-expand-pulse {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
+}
+
+/* ===== CODE BLOCK CONTENT ===== */
 figure.shiki div.codeblock {
   margin: 0;
-  display: block;
-  overflow: auto;
   border: none;
-  display: flex;
   border-radius: 0 0 8px 8px !important;
+  display: flex;
+  overflow: auto;
+  padding-bottom: 10px;
 }
 
 figure.shiki div.codeblock div {
@@ -213,21 +243,22 @@ figure.shiki div.codeblock div {
   border: none;
 }
 
+/* Line numbers (gutter) */
 figure.shiki .gutter pre {
-  border-radius: 0 !important;
-  padding-right: 8px !important;
-  padding-left: 8px !important;
   margin-right: 8px !important;
+  padding: 0 8px !important;
   background-color: var(--hlnumber-bg) !important;
   color: var(--hlnumber-color) !important;
   text-align: right !important;
   user-select: none !important;
+  border: none !important;
+  border-radius: 0 !important;
 }
 
+/* Code content */
 figure.shiki pre {
   margin: 0 !important;
-  padding: 0px 0 !important;
-
+  padding: 0 !important;
   border: none !important;
   border-radius: 0 !important;
 }
@@ -238,63 +269,33 @@ figure.shiki pre code {
 
 figure.shiki .codeblock pre * {
   font-size: 1em;
-  font-family: "Maple Mono NF CN", "Fira Code", "Fira Mono", Menlo, "DejaVu Sans Mono", monospace, 宋体;
-  overflow: auto !important;
+  font-family: "Maple Mono NF CN", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace, 宋体;
   line-height: 1.6;
+  overflow: auto !important;
 }
 
 figure.shiki .code pre {
-  padding-right: 0px !important;
-  padding-left: 0px !important;
   width: 100% !important;
+  padding: 0 !important;
   background: none !important;
 }
 
-.code-expand-btn:not(.expand-done) ~ pre,
-.code-expand-btn:not(.expand-done) ~ *pre {
+/* Expand button interactions */
+.code-expand-btn:not(.expand-done)~pre,
+.code-expand-btn:not(.expand-done)~* pre {
   overflow: hidden;
 }
 
-.code-expand-btn.expand-done + pre,
-.code-expand-btn.expand-done + * pre,
-.code-expand-btn.expand-done + div.codeblock,
-.code-expand-btn.expand-done + * div.codeblock {
+.code-expand-btn.expand-done+pre,
+.code-expand-btn.expand-done+* pre,
+.code-expand-btn.expand-done+div.codeblock,
+.code-expand-btn.expand-done+* div.codeblock {
   margin-bottom: 1.8em;
 }
 
-/* 全屏模式样式 */
-figure.shiki.code-fullpage {
-  background: var(--hl-bg);
-  color: var(--hl-color);
-  border: 2px solid var(--hl-border-color); /* 设置边框颜色 */
-}
-
-/* 退出全屏按钮 */
-.exit-fullpage-button {
-  position: fixed;
-  top: 50px;
-  right: 50px;
-
-  z-index: 10000;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.3);
-  color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 30%;
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  transition: background 0.3s;
-}
-
-.exit-fullpage-button:hover {
-  background: rgba(0, 0, 0, 0.8);
-  background: #89b4fa;
-}
-
-.exit-fullpage-button i {
-  font-size: 16px;
+.code-expand-btn.expand-done+pre,
+.code-expand-btn.expand-done+* pre,
+.code-expand-btn.expand-done+div.codeblock,
+.code-expand-btn.expand-done+* div.codeblock {
+  margin-bottom: 1.8em;
 }
