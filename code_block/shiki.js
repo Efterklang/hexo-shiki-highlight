@@ -7,7 +7,6 @@ const addHighlightTool = function () {
     highlightLineNumberToggle,
     highlightWrapToggle,
     highlightLang,
-    macosTrafficLight, // Added macosTrafficLight
     // title
     highlightTitle,
     // right
@@ -374,16 +373,14 @@ const addHighlightTool = function () {
       
       let leftHTML = ""; // 用于构建左侧内容的 HTML 字符串
 
-      if (macosTrafficLight) {
-        // 添加 macOS 风格的红绿灯按钮
-        leftHTML += `
-          <div class="traffic-lights">
-            <span class="traffic-light red"></span>
-            <span class="traffic-light yellow"></span>
-            <span class="traffic-light green"></span>
-          </div>
-        `;
-      }
+      // 添加 macOS 风格的红绿灯按钮
+      leftHTML += `
+        <div class="traffic-lights">
+          <span class="traffic-light red"></span>
+          <span class="traffic-light yellow"></span>
+          <span class="traffic-light green"></span>
+        </div>
+      `;
 
       // 添加行号切换、自动换行切换和语言名称
       // highlightLineNumberToggleEle, highlightWrapToggleEle, 和 lang (如果 highlightLang 为 true)
