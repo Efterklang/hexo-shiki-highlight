@@ -1,4 +1,6 @@
 const { createHighlighter, bundledLanguages, bundledThemes } = require("shiki");
+const fs = require('hexo-fs');
+const path = require('path');
 
 // load all languages and themes
 async function initializeHighlighter() {
@@ -17,6 +19,26 @@ async function initializeHighlighter() {
 // read config
 const config = hexo.config.shiki;
 if (!config) return;
+
+// Register generator to copy local CSS and JS files
+hexo.extend.generator.register('shiki_local_assets', () => [
+  {
+    path: 'css/code_block/shiki.css', // Target path in public: public/css/code_block/shiki.css
+    data: () => fs.createReadStream(path.join(__dirname, 'code_block/shiki.css'))
+  },
+  {
+    path: 'js/code_block/shiki.js',  // Target path in public: public/js/code_block/shiki.js
+    data: () => fs.createReadStream(path.join(__dirname, 'code_block/shiki.js'))
+  }
+]);
+
+// Inject local CSS and JS using paths from the generator
+hexo.extend.injector.register('head_end', () => {
+  return `<link rel="stylesheet" href="${hexo.config.root}css/code_block/shiki.css">`;
+});
+hexo.extend.injector.register('body_end', () => {
+  return `<script src="${hexo.config.root}js/code_block/shiki.js"></script>`;
+});
 
 // read language_aliases
 const language_aliases = new Map(Object.entries(config.language_aliases || {}));
@@ -37,12 +59,6 @@ const {
   exclude_languages: []
 } = config;
 
-
-const css = hexo.extend.helper.get("css").bind(hexo);
-const js = hexo.extend.helper.get("js").bind(hexo);
-
-hexo.extend.injector.register('head_end', () => { return css("https://cdn.jsdelivr.net/npm/hexo-shiki-highlight/code_block/shiki.css") });
-hexo.extend.injector.register('body_end', () => { return js("https://cdn.jsdelivr.net/npm/hexo-shiki-highlight/code_block/shiki.js") });
 
 if (config.highlight_height_limit) {
   hexo.extend.injector.register("head_end", () => {

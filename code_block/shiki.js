@@ -7,6 +7,7 @@ const addHighlightTool = function () {
     highlightLineNumberToggle,
     highlightWrapToggle,
     highlightLang,
+    macosTrafficLight, // Added macosTrafficLight
     // title
     highlightTitle,
     // right
@@ -370,8 +371,30 @@ const addHighlightTool = function () {
       // 创建左对齐部分
       const leftContainer = document.createElement("div");
       leftContainer.className = "left";
-      leftContainer.innerHTML =
-        highlightLineNumberToggleEle + highlightWrapToggleEle + (highlightLang ? lang : "");
+      
+      let leftHTML = ""; // 用于构建左侧内容的 HTML 字符串
+
+      if (macosTrafficLight) {
+        // 添加 macOS 风格的红绿灯按钮
+        leftHTML += `
+          <div class="traffic-lights">
+            <span class="traffic-light red"></span>
+            <span class="traffic-light yellow"></span>
+            <span class="traffic-light green"></span>
+          </div>
+        `;
+      }
+
+      // 添加行号切换、自动换行切换和语言名称
+      // highlightLineNumberToggleEle, highlightWrapToggleEle, 和 lang (如果 highlightLang 为 true)
+      // 都已经是预先格式化好的 HTML 字符串。
+      leftHTML += highlightLineNumberToggleEle;
+      leftHTML += highlightWrapToggleEle;
+      if (highlightLang) { // highlightLang 是一个布尔值配置，用于控制是否显示语言名称
+        leftHTML += lang;    // lang 参数在此上下文中是包含语言名称的 HTML 字符串
+      }
+      
+      leftContainer.innerHTML = leftHTML; // 一次性设置 innerHTML，确保顺序正确和代码清晰
 
       // 创建居中部分
       const centerContainer = document.createElement("div");

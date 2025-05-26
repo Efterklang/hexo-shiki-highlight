@@ -3,13 +3,14 @@ figure.shiki div.codeblock::-webkit-scrollbar-thumb {
   background: var(--hlscrollbar-bg);
   border-radius: 2.5px;
 }
+
 figure.shiki div.codeblock::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
 /* code block figure */
-figure.shiki .shiki-tools.closed ~ * {
+figure.shiki .shiki-tools.closed~* {
   display: none;
 }
 
@@ -24,32 +25,35 @@ figure.shiki {
   background: var(--hl-bg);
   color: var(--hl-color);
   line-height: 1.6;
-  border: 2px solid var(--hl-border-color); /* 设置边框颜色 */
+  border: 2px solid var(--hl-border-color);
+  /* 设置边框颜色 */
 }
 
 .shiki-tools {
-    border-radius: 35px 35px 0 0;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: 15px;
-    padding-right: 15px;
-    overflow: hidden;
-    min-height: 30px;
-    height: 0.9em;
-    background: var(--hltools-bg);
-    color: var(--hltools-color);
-    font-size: 1em;
-    user-select: none;
+  border-radius: 35px 35px 0 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 15px;
+  padding-right: 15px;
+  overflow: hidden;
+  min-height: 30px;
+  height: 0.9em;
+  background: var(--hltools-bg);
+  color: var(--hltools-color);
+  font-size: 1em;
+  user-select: none;
 }
 
 /* 左对齐部分 */
 .shiki-tools .left {
   display: flex;
   align-items: center;
-  gap: 5px; /* 左对齐元素之间的间隔 */
-  flex-shrink: 0; /* 禁止缩小 */
+  gap: 5px;
+  /* 左对齐元素之间的间隔 */
+  flex-shrink: 0;
+  /* 禁止缩小 */
 }
 
 /* 居中部分 */
@@ -57,17 +61,22 @@ figure.shiki {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 1; /* 占据剩余空间 */
-  overflow: hidden; /* 防止内容溢出 */
-  min-width: 0; /* 允许内容缩小 */
+  flex-grow: 1;
+  /* 占据剩余空间 */
+  overflow: hidden;
+  /* 防止内容溢出 */
+  min-width: 0;
+  /* 允许内容缩小 */
 }
 
 /* 右对齐部分 */
 .shiki-tools .right {
   display: flex;
   align-items: center;
-  gap: 10px; /* 右对齐元素之间的间隔 */
-  flex-shrink: 0; /* 禁止缩小 */
+  gap: 10px;
+  /* 右对齐元素之间的间隔 */
+  flex-shrink: 0;
+  /* 禁止缩小 */
 }
 
 .shiki-tools .copy-button,
@@ -92,11 +101,15 @@ figure.shiki {
     color 0.3s,
     transform 0.3s ease;
 }
+
 .shiki-tools .expand.closed {
-  transform: rotate(90deg); /* 初始旋转 */
+  transform: rotate(90deg);
+  /* 初始旋转 */
 }
+
 .shiki-tools .expand.closed:hover {
-  transform: rotate(90deg); /* hover 时旋转 + 放大 */
+  transform: rotate(90deg);
+  /* hover 时旋转 + 放大 */
 }
 
 /* hover 效果 */
@@ -114,18 +127,23 @@ figure.shiki {
   color: #89b4fa;
   z-index: 1000;
   opacity: 0;
-  position: absolute; /* 使用绝对定位 */
-  white-space: nowrap; /* 防止换行 */
-  transition: opacity 0.2s ease; /* 过渡效果 */
+  position: absolute;
+  /* 使用绝对定位 */
+  white-space: nowrap;
+  /* 防止换行 */
+  transition: opacity 0.2s ease;
+  /* 过渡效果 */
   transform: translateX(-110%);
   padding-left: 5px;
   padding-right: 0px;
-  background: var(--hltools-bg); /* 背景色与工具栏一致 */
+  background: var(--hltools-bg);
+  /* 背景色与工具栏一致 */
 }
 
 .shiki-tools .copy-notice[style*="opacity: 1"] {
   opacity: 1;
-  visibility: visible; /* 显示时设置为可见 */
+  visibility: visible;
+  /* 显示时设置为可见 */
 }
 
 /* 标题样式 */
@@ -135,11 +153,16 @@ figure.shiki {
   padding-left: 10px;
   padding-right: 10px;
   color: var(--hltools-color);
-  user-select: text; /* 允许用户选择文本 */
-  white-space: nowrap; /* 防止换行 */
-  overflow: hidden; /* 超出部分隐藏 */
-  text-overflow: ellipsis; /* 超出部分显示省略号 */
-  flex-shrink: 1; /* 允许标题缩小 */
+  user-select: text;
+  /* 允许用户选择文本 */
+  white-space: nowrap;
+  /* 防止换行 */
+  overflow: hidden;
+  /* 超出部分隐藏 */
+  text-overflow: ellipsis;
+  /* 超出部分显示省略号 */
+  flex-shrink: 1;
+  /* 允许标题缩小 */
 }
 
 /* 语言标签样式 */
@@ -180,9 +203,11 @@ figure.shiki:hover .shiki-tools .code-lang {
   0% {
     opacity: 0.6;
   }
+
   50% {
     opacity: 0.1;
   }
+
   100% {
     opacity: 0.6;
   }
@@ -194,7 +219,7 @@ figure.shiki:hover .shiki-tools .code-lang {
   animation: code-expand-key 1.2s infinite;
 }
 
-.code-expand-btn.expand-done > i {
+.code-expand-btn.expand-done>i {
   transform: rotate(180deg);
 }
 
@@ -250,15 +275,15 @@ figure.shiki .code pre {
   background: none !important;
 }
 
-.code-expand-btn:not(.expand-done) ~ pre,
-.code-expand-btn:not(.expand-done) ~ *pre {
+.code-expand-btn:not(.expand-done)~pre,
+.code-expand-btn:not(.expand-done)~*pre {
   overflow: hidden;
 }
 
-.code-expand-btn.expand-done + pre,
-.code-expand-btn.expand-done + * pre,
-.code-expand-btn.expand-done + div.codeblock,
-.code-expand-btn.expand-done + * div.codeblock {
+.code-expand-btn.expand-done+pre,
+.code-expand-btn.expand-done+* pre,
+.code-expand-btn.expand-done+div.codeblock,
+.code-expand-btn.expand-done+* div.codeblock {
   margin-bottom: 1.8em;
 }
 
@@ -266,7 +291,8 @@ figure.shiki .code pre {
 figure.shiki.code-fullpage {
   background: var(--hl-bg);
   color: var(--hl-color);
-  border: 2px solid var(--hl-border-color); /* 设置边框颜色 */
+  border: 2px solid var(--hl-border-color);
+  /* 设置边框颜色 */
 }
 
 /* 退出全屏按钮 */
@@ -297,4 +323,101 @@ figure.shiki.code-fullpage {
 
 .exit-fullpage-button i {
   font-size: 16px;
+}
+
+/* macOS Traffic Lights */
+.shiki-tools .left .traffic-lights {
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+  /* 与 .left 容器内其他元素的间距 */
+  margin-left: -7px;
+  /* 由于 .shiki-tools 有 padding-left: 15px，而灯本身有 margin-left，微调使其更贴近左边缘 */
+}
+
+.traffic-light {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 8px;
+  /* 灯之间的间距, 第一个灯距离容器左边距也是8px */
+  background-color: #ddd;
+  /* 默认颜色 */
+  position: relative;
+  /* 用于伪元素定位 */
+}
+
+.traffic-light.red {
+  background-color: #ff5f57;
+}
+
+.traffic-light.yellow {
+  background-color: #ffbd2e;
+}
+
+.traffic-light.green {
+  background-color: #28c940;
+}
+
+/* 可选：鼠标悬停时显示关闭、最小化、最大化图标 */
+.traffic-light::after {
+  content: "";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+  font-size: 9px;
+  font-family: "Lucida Grande", "Segoe UI", sans-serif;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+figure.shiki:hover .traffic-light::after {
+  opacity: 1;
+}
+
+figure.shiki:hover .traffic-light.red::after {
+  content: "×";
+}
+
+figure.shiki:hover .traffic-light.yellow::after {
+  content: "−";
+}
+
+figure.shiki:hover .traffic-light.green::after {
+  content: "+";
+}
+/* macOS-like traffic lights */
+.traffic-lights {
+  display: flex;
+  align-items: center;
+  padding-left: 8px; /* 可根据工具栏其他元素调整 */
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: block;
+}
+
+.traffic-light:last-child {
+  margin-right: 0;
+}
+
+.traffic-light.red {
+  background-color: #ff5f57;
+}
+
+.traffic-light.yellow {
+  background-color: #ffbd2e;
+}
+
+.traffic-light.green {
+  background-color: #28c940;
 }
