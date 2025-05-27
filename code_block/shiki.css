@@ -25,7 +25,7 @@ figure.shiki {
 }
 
 /* Hide content when toolbar is closed */
-figure.shiki .shiki-tools.closed ~ * {
+figure.shiki .shiki-tools.closed~* {
   display: none;
 }
 
@@ -74,7 +74,6 @@ figure.shiki .shiki-tools.closed ~ * {
 /* ===== INTERACTIVE ELEMENTS ===== */
 .shiki-tools .copy-button,
 .shiki-tools .raw-button,
-.shiki-tools .fullpage-button,
 .shiki-tools .fa-list-ol,
 .shiki-tools .fa-arrow-down-wide-short,
 .shiki-tools .expand {
@@ -94,7 +93,6 @@ figure.shiki .shiki-tools.closed ~ * {
 /* Hover effects */
 .shiki-tools .copy-button:hover,
 .shiki-tools .raw-button:hover,
-.shiki-tools .fullpage-button:hover,
 .shiki-tools .fa-list-ol:hover,
 .shiki-tools .fa-arrow-down-wide-short:hover,
 .shiki-tools .expand:hover {
@@ -166,9 +164,17 @@ figure.shiki:hover .shiki-tools .code-lang {
   position: relative;
 }
 
-.traffic-light.red { background-color: #f38ba8; }
-.traffic-light.yellow { background-color: #fab387; }
-.traffic-light.green { background-color:#a6e3a1 ; }
+.traffic-light.red {
+  background-color: #f38ba8;
+}
+
+.traffic-light.yellow {
+  background-color: #fab387;
+}
+
+.traffic-light.green {
+  background-color: #a6e3a1;
+}
 
 /* Traffic light hover icons */
 .traffic-light::after {
@@ -206,13 +212,20 @@ figure.shiki:hover .shiki-tools .code-lang {
   animation: code-expand-pulse 1.2s infinite;
 }
 
-.code-expand-btn.expand-done > i {
+.code-expand-btn.expand-done>i {
   transform: rotate(180deg);
 }
 
 @keyframes code-expand-pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 0.1; }
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
 }
 
 /* ===== CODE BLOCK CONTENT ===== */
@@ -268,46 +281,21 @@ figure.shiki .code pre {
 }
 
 /* Expand button interactions */
-.code-expand-btn:not(.expand-done) ~ pre,
-.code-expand-btn:not(.expand-done) ~ * pre {
+.code-expand-btn:not(.expand-done)~pre,
+.code-expand-btn:not(.expand-done)~* pre {
   overflow: hidden;
 }
 
-.code-expand-btn.expand-done + pre,
-.code-expand-btn.expand-done + * pre,
-.code-expand-btn.expand-done + div.codeblock,
-.code-expand-btn.expand-done + * div.codeblock {
+.code-expand-btn.expand-done+pre,
+.code-expand-btn.expand-done+* pre,
+.code-expand-btn.expand-done+div.codeblock,
+.code-expand-btn.expand-done+* div.codeblock {
   margin-bottom: 1.8em;
 }
 
-/* ===== FULLSCREEN MODE ===== */
-figure.shiki.code-fullpage {
-  background: var(--hl-bg);
-  color: var(--hl-color);
-  border: 2px solid var(--hl-border-color);
-}
-
-.exit-fullpage-button {
-  position: fixed;
-  top: 50px;
-  right: 50px;
-  z-index: 10000;
-  width: 50px;
-  height: 50px;
-  border-radius: 30%;
-  background: rgba(0, 0, 0, 0.3);
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s;
-}
-
-.exit-fullpage-button:hover {
-  background: #89b4fa;
-}
-
-.exit-fullpage-button i {
-  font-size: 16px;
+.code-expand-btn.expand-done+pre,
+.code-expand-btn.expand-done+* pre,
+.code-expand-btn.expand-done+div.codeblock,
+.code-expand-btn.expand-done+* div.codeblock {
+  margin-bottom: 1.8em;
 }

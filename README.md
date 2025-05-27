@@ -24,7 +24,6 @@ shiki:
   highlight_title: true # Show code block title (if any). Default is true.
   highlight_copy: true # Show copy button. Default is true.
   highlight_raw: true # Show raw code button. Default is true.
-  highlight_fullpage: true # Show full page button. Default is true.
   is_highlight_shrink: false # Shrink code block by default. Default is false.
   highlight_height_limit: 0 # Code block height limit in px. 0 means no limit. Default is 0.
   copy:

@@ -6,15 +6,13 @@ const SELECTORS = {
   gutter: '.gutter',
   gutterPre: '.gutter pre',
   preShiki: 'pre.shiki',
-  expandBtn: '.code-expand-btn',
-  exitFullpage: '.exit-fullpage-button'
+  expandBtn: '.code-expand-btn'
 };
 
 const CLASSES = {
   copyTrue: 'copy-true',
   closed: 'closed',
   expandDone: 'expand-done',
-  codeFullpage: 'code-fullpage',
   wrapActive: 'wrap-active'
 };
 
@@ -23,10 +21,8 @@ const ICONS = {
   wrap: '<i class="fa-solid fa-arrow-down-wide-short" title="Toggle Wrap"></i>',
   copy: '<div class="copy-notice"></div><i class="fas fa-paste copy-button"></i>',
   raw: '<i class="fas fa-file-alt raw-button" title="View Raw"></i>',
-  fullpage: '<i class="fa-solid fa-up-right-and-down-left-from-center fullpage-button"></i>',
   expand: '<i class="fas fa-angle-down expand"></i>',
   expandCode: '<i class="fas fa-angle-double-down"></i>',
-  exitFullpage: '<i class="fas fa-sign-out-alt exit-readmode"></i>',
   trafficLights: `
     <div class="traffic-lights">
       <span class="traffic-light red"></span>
@@ -258,103 +254,6 @@ const FeatureHandlers = {
   }
 };
 
-// Fullscreen Handler
-const FullscreenHandler = {
-  toggle(item, clickElement) {
-    const wrapper = item.closest(SELECTORS.figureHighlight);
-    const isFullpage = wrapper.classList.toggle(CLASSES.codeFullpage);
-
-    const expandButton = wrapper.querySelector(SELECTORS.expandBtn);
-
-    // Store initial state
-    if (!wrapper.dataset.initialExpandState) {
-      wrapper.dataset.initialExpandState = expandButton?.classList.contains(CLASSES.expandDone)
-        ? 'expanded' : 'collapsed';
-    }
-
-    if (isFullpage) {
-      this.enterFullscreen(wrapper, expandButton);
-    } else {
-      this.exitFullscreen(wrapper, expandButton);
-    }
-
-    // Toggle button icons
-    clickElement.classList.toggle('fa-down-left-and-up-right-to-center', isFullpage);
-    clickElement.classList.toggle('fa-up-right-and-down-left-from-center', !isFullpage);
-  },
-
-  enterFullscreen(wrapper, expandButton) {
-    Object.assign(wrapper.style, {
-      position: 'fixed',
-      top: '0',
-      left: '0',
-      width: '100vw',
-      height: '100vh',
-      zIndex: '9999',
-      margin: '0',
-      borderRadius: '0',
-      overflow: 'auto'
-    });
-
-    document.documentElement.style.overflow = 'hidden';
-
-    // Force expand if collapsed
-    if (expandButton && !expandButton.classList.contains(CLASSES.expandDone)) {
-      expandButton.click();
-    }
-
-    // Hide expand button and add exit button
-    if (expandButton) expandButton.style.display = 'none';
-    this.addExitButton();
-  },
-
-  exitFullscreen(wrapper, expandButton) {
-    // Reset styles
-    Object.assign(wrapper.style, {
-      position: '',
-      top: '',
-      left: '',
-      width: '',
-      height: '',
-      zIndex: '',
-      margin: '',
-      borderRadius: '',
-      overflow: ''
-    });
-
-    document.documentElement.style.overflow = '';
-
-    // Restore expand button
-    if (expandButton) expandButton.style.display = '';
-
-    // Restore initial state
-    if (wrapper.dataset.initialExpandState === 'collapsed' &&
-      expandButton?.classList.contains(CLASSES.expandDone)) {
-      expandButton.click();
-    }
-
-    this.removeExitButton();
-    delete wrapper.dataset.initialExpandState;
-  },
-
-  addExitButton() {
-    const exitButton = Utils.createElement('div', 'exit-fullpage-button', ICONS.exitFullpage);
-    exitButton.addEventListener('click', () => {
-      const fullscreenElement = document.querySelector(`.${CLASSES.codeFullpage}`);
-      if (fullscreenElement) {
-        const fullpageButton = fullscreenElement.querySelector('.fullpage-button');
-        if (fullpageButton) fullpageButton.click();
-      }
-    });
-    document.body.appendChild(exitButton);
-  },
-
-  removeExitButton() {
-    const exitButton = document.querySelector(SELECTORS.exitFullpage);
-    exitButton?.remove();
-  }
-};
-
 // Main toolbar event handler
 function handleToolbarClick(event) {
   const target = event.target;
@@ -363,7 +262,6 @@ function handleToolbarClick(event) {
   const handlers = {
     'expand': () => FeatureHandlers.shrink(this),
     'copy-button': () => FeatureHandlers.copy(this, target),
-    'fullpage-button': () => FullscreenHandler.toggle(this, target),
     'raw-button': () => FeatureHandlers.raw(this),
     'fa-list-ol': () => FeatureHandlers.toggleLineNumbers(this),
     'fa-arrow-down-wide-short': () => FeatureHandlers.toggleWrap(this)
@@ -409,7 +307,6 @@ function createToolbar(lang, title, item) {
   if (config.highlightWrapToggle) rightHTML += ICONS.wrap;
   if (config.highlightCopy) rightHTML += ICONS.copy;
   if (config.highlightRaw) rightHTML += ICONS.raw;
-  if (config.highlightFullPage) rightHTML += ICONS.fullpage;
   if (config.isHighlightShrink !== undefined) {
     rightHTML += `<i class="fas fa-angle-down expand ${config.isHighlightShrink === false ? CLASSES.closed : ''}"></i>`;
   }

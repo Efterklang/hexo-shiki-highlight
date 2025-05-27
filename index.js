@@ -13,7 +13,7 @@ const CODE_BLOCK_REGEX = /(?<quote>[> ]*)(?<ul>(-|\d+\.)?)(?<start>\s*)(?<tick>~
 // Utility functions
 function stripIndent(code, indentLength) {
   if (indentLength <= 0) return code;
-  
+
   return code.split('\n')
     .map(line => {
       const lineIndentMatch = line.match(/^[ \t]+/);
@@ -54,7 +54,7 @@ function setupConfiguration() {
   if (!config) return null;
 
   const language_aliases = new Map(Object.entries(config.language_aliases || {}));
-  
+
   const settings = {
     theme: config.theme || "catppuccin-mocha",
     line_number: config.line_number,
@@ -67,7 +67,6 @@ function setupConfiguration() {
       highlight_title: config.highlight_title,
       highlight_copy: config.highlight_copy,
       highlight_raw: config.highlight_raw,
-      highlight_fullpage: config.highlight_fullpage,
       is_highlight_shrink: config.is_highlight_shrink,
       highlight_height_limit: config.highlight_height_limit,
     },
@@ -79,6 +78,7 @@ function setupConfiguration() {
 
   return { config, settings };
 }
+
 
 // Asset registration
 function registerAssets() {
@@ -98,7 +98,7 @@ function registerAssets() {
   hexo.extend.injector.register('head_end', () => {
     return `<link rel="stylesheet" href="${hexo.config.root}${ASSET_PATHS.css}">`;
   });
-  
+
   hexo.extend.injector.register('body_end', () => {
     return `<script src="${hexo.config.root}${ASSET_PATHS.js}"></script>`;
   });
@@ -150,7 +150,6 @@ function injectConfiguration(settings) {
       highlightTitle: ${settings.features.highlight_title},
       highlightCopy: ${settings.features.highlight_copy},
       highlightRaw: ${settings.features.highlight_raw},
-      highlightFullPage: ${settings.features.highlight_fullpage},
       isHighlightShrink: ${settings.features.is_highlight_shrink},
       highlightHeightLimit: ${settings.features.highlight_height_limit},
       copy: {
@@ -193,7 +192,7 @@ function processCodeBlock(code, lang, title, settings, highlighter) {
   try {
     const normalizedLang = lang?.toLowerCase() || '';
     const realLang = settings.language_aliases.get(normalizedLang) || normalizedLang;
-    
+
     let highlightedCode = highlighter.codeToHtml(code, {
       lang: realLang,
       theme: settings.theme,
@@ -251,13 +250,13 @@ initializeHighlighter().then((highlighter) => {
     post.content = post.content.replace(CODE_BLOCK_REGEX, (...args) => {
       const groups = args.pop();
       let { quote, ul, start, end, lang, title, code } = groups;
-      
+
       // Process indentation
       const indentLength = getIndentLength(args[0]);
       const match = new RegExp(`^${quote.trimEnd()}`, "gm");
       code = code.replace(match, "");
       code = stripIndent(code, indentLength);
-      
+
       // Clean up parameters
       lang = lang || "";
       title = title?.trim() || "";
