@@ -39,7 +39,7 @@ const ICONS = {
 // Utility Functions
 const Utils = {
   isHidden: (element) => element.offsetHeight === 0 && element.offsetWidth === 0,
-  
+
   showAlert: (element, text, duration = 800) => {
     element.textContent = text;
     element.style.opacity = 1;
@@ -88,7 +88,7 @@ const CopyHandler = {
     document.body.appendChild(textarea);
     textarea.select();
     textarea.setSelectionRange(0, textarea.value.length);
-    
+
     try {
       const successful = document.execCommand('copy');
       if (!successful) throw new Error('execCommand failed');
@@ -103,19 +103,19 @@ const FeatureHandlers = {
   copy(parentElement, clickElement) {
     const buttonParent = parentElement.parentNode;
     buttonParent.classList.add(CLASSES.copyTrue);
-    
+
     const codeElement = buttonParent.querySelector(SELECTORS.preCode);
     if (codeElement) {
       CopyHandler.copy(codeElement.innerText, clickElement.previousElementSibling);
     }
-    
+
     buttonParent.classList.remove(CLASSES.copyTrue);
   },
 
   shrink(element) {
     const expandButton = element.querySelector('.expand');
     expandButton?.classList.toggle(CLASSES.closed);
-    
+
     const siblings = [...element.parentNode.children].slice(1);
     const isHidden = Utils.isHidden(siblings[siblings.length - 1]);
     Utils.toggleDisplay(siblings, isHidden);
@@ -124,7 +124,7 @@ const FeatureHandlers = {
   raw(element) {
     const buttonParent = element.parentNode;
     const codeElement = buttonParent.querySelector(SELECTORS.codeblock);
-    
+
     if (!codeElement) {
       console.error('Code element not found!');
       return;
@@ -139,7 +139,7 @@ const FeatureHandlers = {
     const preElement = rawWindow.document.createElement('pre');
     preElement.textContent = codeElement.textContent;
     rawWindow.document.body.appendChild(preElement);
-    
+
     // Style the new window
     Object.assign(rawWindow.document.body.style, {
       margin: '0',
@@ -171,7 +171,7 @@ const FeatureHandlers = {
     }
 
     const isWrapped = pre.style.whiteSpace === 'pre-wrap';
-    
+
     if (isWrapped) {
       this.disableWrap(pre, code, gutterPre, element);
     } else {
@@ -219,7 +219,7 @@ const FeatureHandlers = {
   updateLineNumbers(pre, code, gutterPre) {
     const lines = code.textContent.split('\n');
     const tempContainer = Utils.createElement('div');
-    
+
     // Setup temp container for measurement
     Object.assign(tempContainer.style, {
       visibility: 'hidden',
@@ -233,7 +233,7 @@ const FeatureHandlers = {
       paddingLeft: window.getComputedStyle(pre).paddingLeft,
       paddingRight: window.getComputedStyle(pre).paddingRight
     });
-    
+
     document.body.appendChild(tempContainer);
 
     let lineNumbersHTML = '';
@@ -263,12 +263,12 @@ const FullscreenHandler = {
   toggle(item, clickElement) {
     const wrapper = item.closest(SELECTORS.figureHighlight);
     const isFullpage = wrapper.classList.toggle(CLASSES.codeFullpage);
-    
+
     const expandButton = wrapper.querySelector(SELECTORS.expandBtn);
-    
+
     // Store initial state
     if (!wrapper.dataset.initialExpandState) {
-      wrapper.dataset.initialExpandState = expandButton?.classList.contains(CLASSES.expandDone) 
+      wrapper.dataset.initialExpandState = expandButton?.classList.contains(CLASSES.expandDone)
         ? 'expanded' : 'collapsed';
     }
 
@@ -328,8 +328,8 @@ const FullscreenHandler = {
     if (expandButton) expandButton.style.display = '';
 
     // Restore initial state
-    if (wrapper.dataset.initialExpandState === 'collapsed' && 
-        expandButton?.classList.contains(CLASSES.expandDone)) {
+    if (wrapper.dataset.initialExpandState === 'collapsed' &&
+      expandButton?.classList.contains(CLASSES.expandDone)) {
       expandButton.click();
     }
 
@@ -387,52 +387,41 @@ function createToolbar(lang, title, item) {
   const fragment = document.createDocumentFragment();
   const config = CODE_CONFIG;
 
-  // Check if any tools should be shown
-  const shouldShowTools = config.highlightLineNumberToggle || 
-                         config.highlightWrapToggle || 
-                         config.highlightLang || 
-                         config.highlightTitle || 
-                         config.highlightCopy || 
-                         config.highlightRaw || 
-                         config.highlightFullPage || 
-                         config.isHighlightShrink !== undefined;
+  // Toolbar is always shown
+  const toolbar = Utils.createElement('div', `shiki-tools ${config.isHighlightShrink === false ? CLASSES.closed : ''}`);
 
-  if (shouldShowTools) {
-    const toolbar = Utils.createElement('div', `shiki-tools ${config.isHighlightShrink === false ? CLASSES.closed : ''}`);
-    
-    // Create sections
-    const leftSection = Utils.createElement('div', 'left');
-    const centerSection = Utils.createElement('div', 'center');
-    const rightSection = Utils.createElement('div', 'right');
+  // Create sections
+  const leftSection = Utils.createElement('div', 'left');
+  const centerSection = Utils.createElement('div', 'center');
+  const rightSection = Utils.createElement('div', 'right');
 
-    // Build left section content
-    let leftHTML = ICONS.trafficLights;
-    if (config.highlightLineNumberToggle) leftHTML += ICONS.lineNumber;
-    if (config.highlightWrapToggle) leftHTML += ICONS.wrap;
-    if (config.highlightLang) leftHTML += lang;
-    leftSection.innerHTML = leftHTML;
+  // Build left section content
+  let leftHTML = ICONS.trafficLights;
+  if (config.highlightLang) leftHTML += lang.toUpperCase();
+  leftSection.innerHTML = leftHTML;
 
-    // Build center section
-    if (config.highlightTitle) centerSection.innerHTML = title;
+  // Build center section
+  if (config.highlightTitle) centerSection.innerHTML = title;
 
-    // Build right section
-    let rightHTML = '';
-    if (config.highlightCopy) rightHTML += ICONS.copy;
-    if (config.highlightRaw) rightHTML += ICONS.raw;
-    if (config.highlightFullPage) rightHTML += ICONS.fullpage;
-    if (config.isHighlightShrink !== undefined) {
-      rightHTML += `<i class="fas fa-angle-down expand ${config.isHighlightShrink === false ? CLASSES.closed : ''}"></i>`;
-    }
-    rightSection.innerHTML = rightHTML;
-
-    // Assemble toolbar
-    toolbar.appendChild(leftSection);
-    toolbar.appendChild(centerSection);
-    toolbar.appendChild(rightSection);
-    toolbar.addEventListener('click', handleToolbarClick);
-
-    fragment.appendChild(toolbar);
+  // Build right section
+  let rightHTML = '';
+  if (config.highlightLineNumberToggle) rightHTML += ICONS.lineNumber;
+  if (config.highlightWrapToggle) rightHTML += ICONS.wrap;
+  if (config.highlightCopy) rightHTML += ICONS.copy;
+  if (config.highlightRaw) rightHTML += ICONS.raw;
+  if (config.highlightFullPage) rightHTML += ICONS.fullpage;
+  if (config.isHighlightShrink !== undefined) {
+    rightHTML += `<i class="fas fa-angle-down expand ${config.isHighlightShrink === false ? CLASSES.closed : ''}"></i>`;
   }
+  rightSection.innerHTML = rightHTML;
+
+  // Assemble toolbar
+  toolbar.appendChild(leftSection);
+  toolbar.appendChild(centerSection);
+  toolbar.appendChild(rightSection);
+  toolbar.addEventListener('click', handleToolbarClick);
+
+  fragment.appendChild(toolbar);
 
   // Add expand button if height limit exceeded
   if (config.highlightHeightLimit && item.offsetHeight > config.highlightHeightLimit + 30) {

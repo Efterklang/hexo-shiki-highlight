@@ -14,7 +14,7 @@ figure.shiki {
   margin: 0 0 24px;
   padding: 0;
   border-radius: 8px !important;
-  border: 2px solid var(--hl-border-color);
+  border: #313244 1.5px solid;
   background: var(--hl-bg);
   color: var(--hl-color);
   line-height: 1.6;
@@ -166,9 +166,9 @@ figure.shiki:hover .shiki-tools .code-lang {
   position: relative;
 }
 
-.traffic-light.red { background-color: #ff5f57; }
-.traffic-light.yellow { background-color: #ffbd2e; }
-.traffic-light.green { background-color: #28c940; }
+.traffic-light.red { background-color: #f38ba8; }
+.traffic-light.yellow { background-color: #fab387; }
+.traffic-light.green { background-color:#a6e3a1 ; }
 
 /* Traffic light hover icons */
 .traffic-light::after {
@@ -222,6 +222,7 @@ figure.shiki div.codeblock {
   border-radius: 0 0 8px 8px !important;
   display: flex;
   overflow: auto;
+  padding-bottom: 10px;
 }
 
 figure.shiki div.codeblock div {
@@ -255,7 +256,7 @@ figure.shiki pre code {
 
 figure.shiki .codeblock pre * {
   font-size: 1em;
-  font-family: "Maple Mono NF CN", "Fira Code", "Fira Mono", Menlo, "DejaVu Sans Mono", monospace, 宋体;
+  font-family: "Maple Mono NF CN", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace, 宋体;
   line-height: 1.6;
   overflow: auto !important;
 }
