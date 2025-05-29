@@ -1,13 +1,15 @@
 {
   "name": "hexo-shiki-highlight",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "main": "index.js",
   "keywords": [
     "hexo",
     "hexo-plugin"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests specified\" && exit 0",
+    "prepublishOnly": "echo \"Preparing for publish\"",
+    "postversion": "git push && git push --tags"
   },
   "author": "GnixAij",
   "license": "MIT",
