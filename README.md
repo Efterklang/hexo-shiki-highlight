@@ -14,7 +14,7 @@ Add the following configuration to your Hexo `_config.yml`:
 
 ```yaml
 shiki:
-  theme: 'catppuccin-mocha' # Default theme. See https://shiki.style/themes for all available themes.
+  theme: 'catppuccin-mocha' # Default theme. 
   line_number: true # Show line numbers. Default is true.
   exclude_languages: [] # Languages to exclude from Shiki highlighting.
   language_aliases: {} # Language aliases. e.g., { "vue": "html" }
@@ -30,6 +30,8 @@ shiki:
     success: 'Copied!' # Message on successful copy.
     error: 'Copy failed!' # Message on failed copy.
 ```
+
+Supported themes & language can be found at [Shiki Themes](https://shiki.style/themes) & [Shiki Languages](https://shiki.style/languages).
 
 ## Refs
 

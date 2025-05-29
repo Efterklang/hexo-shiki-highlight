@@ -193,6 +193,12 @@ function processCodeBlock(code, lang, title, settings, highlighter) {
     const normalizedLang = lang?.toLowerCase() || '';
     const realLang = settings.language_aliases.get(normalizedLang) || normalizedLang;
 
+    // Check if the language is supported
+    if (realLang && !bundledLanguages[realLang]) {
+      console.warn(`Shiki does not support language: ${realLang}, falling back to plain text.`);
+      return buildSimpleCodeBlock(code, lang);
+    }
+
     let highlightedCode = highlighter.codeToHtml(code, {
       lang: realLang,
       theme: settings.theme,
