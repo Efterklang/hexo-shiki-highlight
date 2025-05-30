@@ -184,8 +184,10 @@ function injectHeightLimitCSS(heightLimit) {
 // Code processing
 function processCodeBlock(code, lang, title, settings, highlighter) {
   // Handle excluded languages - return original code without any processing
-  if (settings.exclude_languages.includes(lang)) {
-    return code;
+  if (config.exclude_languages.includes(lang)) {
+      let result = "<div class='codeblock'>";
+      result += `<div class="code"><pre><code class="${lang ? `${lang}` : ""}">${require('hexo-util').escapeHTML(code)}</code></pre></div>`;
+      return `${quote + ul + start}<hexoPostRenderCodeBlock>${result}</hexoPostRenderCodeBlock>${end}`;
   }
 
   // Process with Shiki
