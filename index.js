@@ -56,7 +56,9 @@ function setupConfiguration() {
   const language_aliases = new Map(Object.entries(config.language_aliases || {}));
 
   const settings = {
-    theme: config.theme || "catppuccin-mocha",
+    // 双主题配置
+    lightTheme: config['light-theme'] || "min-light",
+    darkTheme: config['dark-theme'] || "nord",
     line_number: config.line_number,
     exclude_languages: config.exclude_languages || [],
     language_aliases,
@@ -104,39 +106,42 @@ function registerAssets() {
   });
 }
 
-// Theme CSS injection
-function injectThemeCSS(themeInfo) {
-  const cssVariables = [
-    `--hl-bg: ${themeInfo.bg};`,
-    `--hl-color: ${themeInfo.fg};`,
-    `--hl-code-type: ${themeInfo.type};`,
-    `--hl-code-name: ${themeInfo.name};`,
-    `--hl-code-display-name: ${themeInfo.displayName || "none"};`,
-  ];
+// 双主题CSS注入 - 添加响应式主题切换支持
+function injectDualThemeCSS() {
+  const dualThemeCSS = `
+    <style>
+    /* 双主题支持 - 系统级暗色模式检测 */
+    @media (prefers-color-scheme: dark) {
+      .shiki,
+      .shiki span {
+        color: var(--shiki-dark) !important;
+        background-color: var(--shiki-dark-bg) !important;
+      }
+    }
+    
+    /* 基于类名的主题切换 */
+    html.dark .shiki,
+    html.dark .shiki span {
+      color: var(--shiki-dark) !important;
+      background-color: var(--shiki-dark-bg) !important;
+    }
+    
+    /* 确保代码块容器也响应主题变化 */
+    @media (prefers-color-scheme: dark) {
+      figure.shiki {
+        background: var(--shiki-dark-bg) !important;
+        color: var(--shiki-dark) !important;
+      }
+    }
+    
+    html.dark figure.shiki {
+      background: var(--shiki-dark-bg) !important;
+      color: var(--shiki-dark) !important;
+    }
+    </style>
+  `;
 
-  // Add color replacements
-  if (themeInfo.colorReplacements) {
-    Object.entries(themeInfo.colorReplacements).forEach(([key, value]) => {
-      cssVariables.push(`--hl-code-color-${key.slice(1)}: ${value};`);
-    });
-  }
-
-  // Add VS Code colors
-  if (themeInfo.colors) {
-    Object.entries(themeInfo.colors).forEach(([key, value]) => {
-      cssVariables.push(`--hl-code-colors-${key}: ${value};`);
-    });
-  }
-
-  // Add other fields
-  cssVariables.push(
-    `--hl-code-schema: ${themeInfo.$schema || "none"};`,
-    `--hl-code-semantic-highlighting: ${themeInfo.semanticHighlighting || "false"};`
-  );
-
-  hexo.extend.injector.register("head_end", () => {
-    return `<style>:root { ${cssVariables.join(' ')} }</style>`;
-  });
+  hexo.extend.injector.register("head_end", () => dualThemeCSS);
 }
 
 // Configuration injection
@@ -199,15 +204,17 @@ function processCodeBlock(code, lang, title, settings, highlighter) {
       return buildSimpleCodeBlock(code, lang);
     }
 
+    // 使用双主题模式
     let highlightedCode = highlighter.codeToHtml(code, {
       lang: realLang,
-      theme: settings.theme,
+      themes: {
+        light: settings.lightTheme,
+        dark: settings.darkTheme
+      }
     });
 
-    // Remove inline styles from pre tag
-    highlightedCode = highlightedCode.replace(/<pre[^>]*>/, (match) => {
-      return match.replace(/\s*style\s*=\s*"[^"]*"\s*tabindex="0"/, "");
-    });
+    // 只移除 tabindex 属性，保留双主题生成的 CSS 变量样式
+    highlightedCode = highlightedCode.replace(/\s*tabindex\s*=\s*"[^"]*"/g, '');
 
     return buildCodeBlock(highlightedCode, code, lang, title, settings);
   } catch (error) {
@@ -225,7 +232,7 @@ function buildCodeBlock(highlightedCode, originalCode, lang, title, settings) {
   const lineNumbers = lines.map((_, i) => `<span class="line">${i + 1}</span><br>`).join('');
   const gutterStyle = settings.line_number ? '' : 'display: none;';
 
-  return `<figure class="shiki${lang ? ` ${lang}` : ""}" data_title="${title || ""}">
+  return `<figure class="shiki shiki-themes${lang ? ` ${lang}` : ""}" data_title="${title || ""}">
     <div class='codeblock'>
       <div class="gutter" style="${gutterStyle}"><pre>${lineNumbers}</pre></div>
       <div class="code">${highlightedCode}</div>
@@ -248,8 +255,8 @@ injectHeightLimitCSS(settings.features.highlight_height_limit);
 initializeHighlighter().then((highlighter) => {
   if (!highlighter) return;
 
-  const themeInfo = highlighter.getTheme(settings.theme);
-  injectThemeCSS(themeInfo);
+  // 注入双主题CSS支持
+  injectDualThemeCSS();
 
   // Register code block processor
   hexo.extend.filter.register("before_post_render", (post) => {

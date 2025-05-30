@@ -5,8 +5,19 @@ figure.shiki div.codeblock::-webkit-scrollbar {
 }
 
 figure.shiki div.codeblock::-webkit-scrollbar-thumb {
-  background: var(--hlscrollbar-bg);
+  background: var(--hlscrollbar-bg, var(--shiki-light, #d0d7de));
   border-radius: 2.5px;
+}
+
+/* 滚动条双主题支持 */
+@media (prefers-color-scheme: dark) {
+  figure.shiki div.codeblock::-webkit-scrollbar-thumb {
+    background: var(--hlscrollbar-bg, var(--shiki-dark, #6e7681)) !important;
+  }
+}
+
+html.dark figure.shiki div.codeblock::-webkit-scrollbar-thumb {
+  background: var(--hlscrollbar-bg, var(--shiki-dark, #6e7681)) !important;
 }
 
 /* ===== MAIN CODE BLOCK FIGURE ===== */
@@ -15,13 +26,29 @@ figure.shiki {
   padding: 0;
   border-radius: 8px !important;
   border: #313244 1.5px solid;
-  background: var(--hl-bg);
-  color: var(--hl-color);
+  background: var(--shiki-light-bg, var(--hl-bg, #ffffff));
+  color: var(--shiki-light, var(--hl-color, #24292e));
   line-height: 1.6;
   position: relative;
   overflow: auto;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
+}
+
+/* 双主题支持 - 系统级暗色模式检测 */
+@media (prefers-color-scheme: dark) {
+  figure.shiki {
+    background: var(--shiki-dark-bg, var(--hl-bg, #1e1e1e)) !important;
+    color: var(--shiki-dark, var(--hl-color, #d4d4d4)) !important;
+    border-color: var(--shiki-dark-bg, #404040);
+  }
+}
+
+/* 基于类名的主题切换 */
+html.dark figure.shiki {
+  background: var(--shiki-dark-bg, var(--hl-bg, #1e1e1e)) !important;
+  color: var(--shiki-dark, var(--hl-color, #d4d4d4)) !important;
+  border-color: var(--shiki-dark-bg, #404040);
 }
 
 /* Hide content when toolbar is closed */
@@ -38,12 +65,25 @@ figure.shiki .shiki-tools.closed~* {
   height: 0.9em;
   padding: 0 15px;
   border-radius: 35px 35px 0 0;
-  background: var(--hltools-bg);
-  color: var(--hltools-color);
+  background: var(--hltools-bg, var(--shiki-light-bg, #f6f8fa));
+  color: var(--hltools-color, var(--shiki-light, #24292e));
   font-size: 1em;
   user-select: none;
   overflow: hidden;
   position: relative;
+}
+
+/* 工具栏双主题支持 */
+@media (prefers-color-scheme: dark) {
+  .shiki-tools {
+    background: var(--hltools-bg, var(--shiki-dark-bg, #2d2d2d)) !important;
+    color: var(--hltools-color, var(--shiki-dark, #d4d4d4)) !important;
+  }
+}
+
+html.dark .shiki-tools {
+  background: var(--hltools-bg, var(--shiki-dark-bg, #2d2d2d)) !important;
+  color: var(--hltools-color, var(--shiki-dark, #d4d4d4)) !important;
 }
 
 /* Toolbar sections */
@@ -103,7 +143,7 @@ figure.shiki .shiki-tools.closed~* {
 .shiki-tools .copy-notice {
   position: absolute;
   color: #89b4fa;
-  background: var(--hltools-bg);
+  background: var(--hltools-bg, var(--shiki-light-bg, #f6f8fa));
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
@@ -111,6 +151,17 @@ figure.shiki .shiki-tools.closed~* {
   padding: 0 5px 0 0;
   transform: translateX(-110%);
   transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* 复制通知双主题支持 */
+@media (prefers-color-scheme: dark) {
+  .shiki-tools .copy-notice {
+    background: var(--hltools-bg, var(--shiki-dark-bg, #2d2d2d)) !important;
+  }
+}
+
+html.dark .shiki-tools .copy-notice {
+  background: var(--hltools-bg, var(--shiki-dark-bg, #2d2d2d)) !important;
 }
 
 .shiki-tools .copy-notice[style*="opacity: 1"] {
@@ -201,15 +252,34 @@ figure.shiki:hover .shiki-tools .code-lang {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--hlexpand-bg);
+  background: var(--hlexpand-bg, var(--shiki-light-bg, #f6f8fa));
   font-size: 1em;
   cursor: pointer;
 }
 
 .code-expand-btn i {
   padding: 6px 0;
-  color: var(--hlnumber-color);
+  color: var(--hlnumber-color, var(--shiki-light, #656d76));
   animation: code-expand-pulse 1.2s infinite;
+}
+
+/* 展开按钮双主题支持 */
+@media (prefers-color-scheme: dark) {
+  .code-expand-btn {
+    background: var(--hlexpand-bg, var(--shiki-dark-bg, #2d2d2d)) !important;
+  }
+  
+  .code-expand-btn i {
+    color: var(--hlnumber-color, var(--shiki-dark, #8b949e)) !important;
+  }
+}
+
+html.dark .code-expand-btn {
+  background: var(--hlexpand-bg, var(--shiki-dark-bg, #2d2d2d)) !important;
+}
+
+html.dark .code-expand-btn i {
+  color: var(--hlnumber-color, var(--shiki-dark, #8b949e)) !important;
 }
 
 .code-expand-btn.expand-done>i {
@@ -247,12 +317,25 @@ figure.shiki div.codeblock div {
 figure.shiki .gutter pre {
   margin-right: 8px !important;
   padding: 0 8px !important;
-  background-color: var(--hlnumber-bg) !important;
-  color: var(--hlnumber-color) !important;
+  background-color: var(--hlnumber-bg, var(--shiki-light-bg, #f6f8fa)) !important;
+  color: var(--hlnumber-color, var(--shiki-light, #656d76)) !important;
   text-align: right !important;
   user-select: none !important;
   border: none !important;
   border-radius: 0 !important;
+}
+
+/* 行号双主题支持 */
+@media (prefers-color-scheme: dark) {
+  figure.shiki .gutter pre {
+    background-color: var(--hlnumber-bg, var(--shiki-dark-bg, #2d2d2d)) !important;
+    color: var(--hlnumber-color, var(--shiki-dark, #8b949e)) !important;
+  }
+}
+
+html.dark figure.shiki .gutter pre {
+  background-color: var(--hlnumber-bg, var(--shiki-dark-bg, #2d2d2d)) !important;
+  color: var(--hlnumber-color, var(--shiki-dark, #8b949e)) !important;
 }
 
 /* Code content */
