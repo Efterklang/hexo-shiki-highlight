@@ -259,12 +259,12 @@ figure.shiki .gutter pre {
 figure.shiki pre {
   margin: 0 !important;
   padding: 0 !important;
-  border: none !important;
   border-radius: 0 !important;
 }
 
 figure.shiki pre code {
   background: none !important;
+  border: none !important;
 }
 
 figure.shiki .codeblock pre * {
