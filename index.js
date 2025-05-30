@@ -183,9 +183,9 @@ function injectHeightLimitCSS(heightLimit) {
 
 // Code processing
 function processCodeBlock(code, lang, title, settings, highlighter) {
-  // Handle excluded languages
+  // Handle excluded languages - return original code without any processing
   if (settings.exclude_languages.includes(lang)) {
-    return buildSimpleCodeBlock(code, lang);
+    return code;
   }
 
   // Process with Shiki
