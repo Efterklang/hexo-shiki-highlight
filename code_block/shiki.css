@@ -217,7 +217,6 @@ figure.shiki:hover .shiki-tools .code-lang {
 }
 
 @keyframes code-expand-pulse {
-
   0%,
   100% {
     opacity: 0.6;
@@ -277,7 +276,6 @@ figure.shiki .codeblock pre * {
 figure.shiki .code pre {
   width: 100% !important;
   padding: 0 !important;
-  background: none !important;
 }
 
 /* Expand button interactions */

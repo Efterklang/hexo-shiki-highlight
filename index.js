@@ -1,4 +1,17 @@
 const { createHighlighter, bundledLanguages, bundledThemes } = require("shiki");
+const {
+  transformerCompactLineOptions,
+  transformerMetaHighlight,
+  transformerMetaWordHighlight,
+  transformerNotationDiff,
+  transformerNotationErrorLevel,
+  transformerNotationFocus,
+  transformerNotationHighlight,
+  transformerNotationWordHighlight,
+  transformerRemoveLineBreak,
+  transformerRemoveNotationEscape,
+  transformerRenderWhitespace,
+} = require("@shikijs/transformers");
 const fs = require('hexo-fs');
 const path = require('path');
 
@@ -9,6 +22,21 @@ const ASSET_PATHS = {
 };
 
 const CODE_BLOCK_REGEX = /(?<quote>[> ]*)(?<ul>(-|\d+\.)?)(?<start>\s*)(?<tick>~{3,}|`{3,}) *(?<lang>\S+)? *(?<title>.*?)\n(?<code>[\s\S]*?)\k<quote>\s*\k<tick>(?<end>\s*)$/gm;
+
+// Supported transformers
+const supported_transformers = {
+  transformerCompactLineOptions,
+  transformerMetaHighlight,
+  transformerMetaWordHighlight,
+  transformerNotationDiff,
+  transformerNotationErrorLevel,
+  transformerNotationFocus,
+  transformerNotationHighlight,
+  transformerNotationWordHighlight,
+  transformerRemoveLineBreak,
+  transformerRemoveNotationEscape,
+  transformerRenderWhitespace,
+};
 
 // Utility functions
 function stripIndent(code, indentLength) {
@@ -60,6 +88,7 @@ function setupConfiguration() {
     line_number: config.line_number,
     exclude_languages: config.exclude_languages || [],
     language_aliases,
+    transformers: config.transformers || [],
     features: {
       highlight_linenumber_toggle: config.highlight_linenumber_toggle,
       highlight_wrap_toggle: config.highlight_wrap_toggle,
@@ -75,10 +104,26 @@ function setupConfiguration() {
       error: config.copy?.error || 'Copy failed!'
     }
   };
-
-  return { config, settings };
+  return settings;
 }
 
+// Process transformers
+function processTransformers(transformerConfigs) {
+  return transformerConfigs
+    .map((transformer) => {
+      if (typeof transformer === "string") {
+        let tfm = supported_transformers[transformer];
+        if (!tfm) return null;
+        return tfm();
+      }
+      let tfm = supported_transformers[transformer["name"]];
+      if (!tfm) return null;
+      let option = transformer["option"];
+      if (!option) return tfm();
+      return tfm(option);
+    })
+    .filter((tfm) => tfm !== null);
+}
 
 // Asset registration
 function registerAssets() {
@@ -182,9 +227,9 @@ function injectHeightLimitCSS(heightLimit) {
 }
 
 // Code processing
-function processCodeBlock(code, lang, title, settings, highlighter) {
+function processCodeBlock(code, lang, title, settings, highlighter, transformers, options = {}) {
   // Handle excluded languages - return original code without any processing
-  if (config.exclude_languages.includes(lang)) {
+  if (settings.exclude_languages.includes(lang)) {
     return code;
   }
 
@@ -199,9 +244,21 @@ function processCodeBlock(code, lang, title, settings, highlighter) {
       return buildSimpleCodeBlock(code, lang);
     }
 
+    // Create transformer for marked lines
+    const transformerMarkedLine = () => {
+      return {
+        line(node, line) {
+          if (options.mark && options.mark.includes(line)) {
+            this.addClassToHast(node, "marked");
+          }
+        },
+      };
+    };
+
     let highlightedCode = highlighter.codeToHtml(code, {
-      lang: realLang,
+      lang: realLang || 'text',
       theme: settings.theme,
+      transformers: [transformerMarkedLine()].concat(transformers),
     });
 
     // Remove inline styles from pre tag
@@ -234,10 +291,11 @@ function buildCodeBlock(highlightedCode, originalCode, lang, title, settings) {
 }
 
 // Main execution
-const configResult = setupConfiguration();
-if (!configResult) return;
 
-const { config, settings } = configResult;
+const settings = setupConfiguration();
+
+// Process transformers
+const transformers = processTransformers(settings.transformers);
 
 // Register assets and inject configurations
 registerAssets();
@@ -267,7 +325,7 @@ initializeHighlighter().then((highlighter) => {
       lang = lang || "";
       title = title?.trim() || "";
 
-      const result = processCodeBlock(code, lang, title, settings, highlighter);
+      const result = processCodeBlock(code, lang, title, settings, highlighter, transformers);
       return `${quote + ul + start}<hexoPostRenderCodeBlock>${result}</hexoPostRenderCodeBlock>${end}`;
     });
   });
