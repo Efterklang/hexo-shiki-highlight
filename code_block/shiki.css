@@ -12,7 +12,7 @@ figure.shiki div.codeblock::-webkit-scrollbar-thumb {
 /* ===== MAIN CODE BLOCK FIGURE ===== */
 figure.shiki {
   margin: 0 0 24px;
-  padding: 0;
+  padding: 0 !important;
   border-radius: 8px !important;
   border: #313244 1.5px solid;
   background: var(--hl-bg);
@@ -217,6 +217,7 @@ figure.shiki:hover .shiki-tools .code-lang {
 }
 
 @keyframes code-expand-pulse {
+
   0%,
   100% {
     opacity: 0.6;
@@ -261,21 +262,15 @@ figure.shiki pre {
   border-radius: 0 !important;
 }
 
-figure.shiki pre code {
+figure.shiki .code pre code {
+  margin: 0 !important;
+  padding: 0 !important;
   background: none !important;
   border: none !important;
-}
-
-figure.shiki .codeblock pre * {
   font-size: 1em;
   font-family: "Maple Mono NF CN", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace, 宋体;
-  line-height: 1.6;
+  line-height: 1;
   overflow: auto !important;
-}
-
-figure.shiki .code pre {
-  width: 100% !important;
-  padding: 0 !important;
 }
 
 /* Expand button interactions */
