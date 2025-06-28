@@ -84,13 +84,14 @@ function setupConfiguration() {
   const language_aliases = new Map(Object.entries(config.language_aliases || {}));
 
   const settings = {
-    theme: config.theme || "catppuccin-mocha",
+
+    light_theme: config.light_theme || "catppuccin-latte",
+    dark_theme: config.night_theme || "catppuccin-mocha",
     line_number: config.line_number,
     exclude_languages: config.exclude_languages || [],
     language_aliases,
     transformers: config.transformers || [],
     features: {
-      highlight_linenumber_toggle: config.highlight_linenumber_toggle,
       highlight_wrap_toggle: config.highlight_wrap_toggle,
       highlight_lang: config.highlight_lang,
       highlight_title: config.highlight_title,
@@ -102,7 +103,8 @@ function setupConfiguration() {
     copy: {
       success: config.copy?.success || 'Copied!',
       error: config.copy?.error || 'Copy failed!'
-    }
+    },
+    dark_mode_class: config.dark_mode_class || 'night',
   };
   return settings;
 }
@@ -125,71 +127,11 @@ function processTransformers(transformerConfigs) {
     .filter((tfm) => tfm !== null);
 }
 
-// Asset registration
-function registerAssets() {
-  // Register generator to copy local CSS and JS files
-  hexo.extend.generator.register('shiki_local_assets', () => [
-    {
-      path: ASSET_PATHS.css,
-      data: () => fs.createReadStream(path.join(__dirname, 'code_block/shiki.css'))
-    },
-    {
-      path: ASSET_PATHS.js,
-      data: () => fs.createReadStream(path.join(__dirname, 'code_block/shiki.js'))
-    }
-  ]);
-
-  // Inject CSS and JS
-  hexo.extend.injector.register('head_end', () => {
-    return `<link rel="stylesheet" href="${hexo.config.root}${ASSET_PATHS.css}">`;
-  });
-
-  hexo.extend.injector.register('body_end', () => {
-    return `<script src="${hexo.config.root}${ASSET_PATHS.js}"></script>`;
-  });
-}
-
-// Theme CSS injection
-function injectThemeCSS(themeInfo) {
-  const cssVariables = [
-    `--hl-bg: ${themeInfo.bg};`,
-    `--hl-color: ${themeInfo.fg};`,
-    `--hl-code-type: ${themeInfo.type};`,
-    `--hl-code-name: ${themeInfo.name};`,
-    `--hl-code-display-name: ${themeInfo.displayName || "none"};`,
-  ];
-
-  // Add color replacements
-  if (themeInfo.colorReplacements) {
-    Object.entries(themeInfo.colorReplacements).forEach(([key, value]) => {
-      cssVariables.push(`--hl-code-color-${key.slice(1)}: ${value};`);
-    });
-  }
-
-  // Add VS Code colors
-  if (themeInfo.colors) {
-    Object.entries(themeInfo.colors).forEach(([key, value]) => {
-      cssVariables.push(`--hl-code-colors-${key}: ${value};`);
-    });
-  }
-
-  // Add other fields
-  cssVariables.push(
-    `--hl-code-schema: ${themeInfo.$schema || "none"};`,
-    `--hl-code-semantic-highlighting: ${themeInfo.semanticHighlighting || "false"};`
-  );
-
-  hexo.extend.injector.register("head_end", () => {
-    return `<style>:root { ${cssVariables.join(' ')} }</style>`;
-  });
-}
-
 // Configuration injection
 function injectConfiguration(settings) {
   const configScript = `
     <script>
     const CODE_CONFIG = {
-      highlightLineNumberToggle: ${settings.features.highlight_linenumber_toggle},
       highlightWrapToggle: ${settings.features.highlight_wrap_toggle},
       highlightLang: ${settings.features.highlight_lang},
       highlightTitle: ${settings.features.highlight_title},
@@ -257,7 +199,10 @@ function processCodeBlock(code, lang, title, settings, highlighter, transformers
 
     let highlightedCode = highlighter.codeToHtml(code, {
       lang: realLang || 'text',
-      theme: settings.theme,
+      themes: {
+        light: settings.light_theme,
+        night: settings.dark_theme,
+      },
       transformers: [transformerMarkedLine()].concat(transformers),
     });
 
@@ -291,42 +236,69 @@ function buildCodeBlock(highlightedCode, originalCode, lang, title, settings) {
 }
 
 // Main execution
-
 const settings = setupConfiguration();
+if (settings) {
+  const transformers = processTransformers(settings.transformers);
 
-// Process transformers
-const transformers = processTransformers(settings.transformers);
+  initializeHighlighter().then((highlighter) => {
+    if (!highlighter) return;
 
-// Register assets and inject configurations
-registerAssets();
-injectConfiguration(settings);
-injectHeightLimitCSS(settings.features.highlight_height_limit);
+    // --- Asset and CSS Generation ---
+    hexo.extend.generator.register('shiki_assets', () => {
+      // Correctly join paths from the plugin directory
+      const shikiCssPath = path.join(__dirname, 'code_block/shiki.css');
+      const colorCssPath = path.join(__dirname, 'code_block/color.css');
 
-// Initialize and setup highlighter
-initializeHighlighter().then((highlighter) => {
-  if (!highlighter) return;
+      const shikiCss = fs.readFileSync(shikiCssPath);
+      let colorCss = fs.readFileSync(colorCssPath);
 
-  const themeInfo = highlighter.getTheme(settings.theme);
-  injectThemeCSS(themeInfo);
+      // Replace placeholder with a modern, valid, and grouped CSS selector
+      if (settings.dark_mode_class) {
+        const className = settings.dark_mode_class;
+        // Use the :is() pseudo-class for a clean and correct selector group
+        const switcherSelector = `:is(body.${className}, html[data-theme="${className}"])`;
+        // Use a global regex to replace all occurrences of the placeholder
+        colorCss = colorCss.replace(/\.theme-switcher-class/g, switcherSelector);
+      }
 
-  // Register code block processor
-  hexo.extend.filter.register("before_post_render", (post) => {
-    post.content = post.content.replace(CODE_BLOCK_REGEX, (...args) => {
-      const groups = args.pop();
-      let { quote, ul, start, end, lang, title, code } = groups;
+      const finalCss = shikiCss + '\n' + colorCss;
 
-      // Process indentation
-      const indentLength = getIndentLength(args[0]);
-      const match = new RegExp(`^${quote.trimEnd()}`, "gm");
-      code = code.replace(match, "");
-      code = stripIndent(code, indentLength);
+      return [
+        {
+          path: ASSET_PATHS.css,
+          data: () => finalCss
+        },
+        {
+          path: ASSET_PATHS.js,
+          data: () => fs.createReadStream(path.join(__dirname, 'code_block/shiki.js'))
+        }
+      ];
+    });
 
-      // Clean up parameters
-      lang = lang || "";
-      title = title?.trim() || "";
+    // --- Injectors ---
+    hexo.extend.injector.register('head_end', () => `<link rel="stylesheet" href="${hexo.config.root}${ASSET_PATHS.css}">`);
+    hexo.extend.injector.register('body_end', () => `<script src="${hexo.config.root}${ASSET_PATHS.js}"></script>`);
 
-      const result = processCodeBlock(code, lang, title, settings, highlighter, transformers);
-      return `${quote + ul + start}<hexoPostRenderCodeBlock>${result}</hexoPostRenderCodeBlock>${end}`;
+    injectConfiguration(settings);
+    injectHeightLimitCSS(settings.features.highlight_height_limit);
+
+    // --- Filter Registration ---
+    hexo.extend.filter.register("before_post_render", (post) => {
+      post.content = post.content.replace(CODE_BLOCK_REGEX, (...args) => {
+        const groups = args.pop();
+        let { quote, ul, start, end, lang, title, code } = groups;
+
+        const indentLength = getIndentLength(args[0]);
+        const match = new RegExp(`^${quote.trimEnd()}`, "gm");
+        code = code.replace(match, "");
+        code = stripIndent(code, indentLength);
+
+        lang = lang || "";
+        title = title?.trim() || "";
+
+        const result = processCodeBlock(code, lang, title, settings, highlighter, transformers);
+        return `${quote + ul + start}<hexoPostRenderCodeBlock>${result}</hexoPostRenderCodeBlock>${end}`;
+      });
     });
   });
-});
+}

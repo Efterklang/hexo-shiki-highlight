@@ -5,7 +5,6 @@ figure.shiki div.codeblock::-webkit-scrollbar {
 }
 
 figure.shiki div.codeblock::-webkit-scrollbar-thumb {
-  background: var(--hlscrollbar-bg);
   border-radius: 2.5px;
 }
 
@@ -14,9 +13,8 @@ figure.shiki {
   margin: 0 0 24px;
   padding: 0 !important;
   border-radius: 8px !important;
-  border: #313244 1.5px solid;
-  background: var(--hl-bg);
-  color: var(--hl-color);
+  border-width: 1.5px;
+  border-style: solid;
   line-height: 1.6;
   position: relative;
   overflow: auto;
@@ -38,8 +36,6 @@ figure.shiki .shiki-tools.closed~* {
   height: 0.9em;
   padding: 0 15px;
   border-radius: 35px 35px 0 0;
-  background: var(--hltools-bg);
-  color: var(--hltools-color);
   font-size: 1em;
   user-select: none;
   overflow: hidden;
@@ -90,20 +86,9 @@ figure.shiki .shiki-tools.closed~* {
   transform: rotate(90deg);
 }
 
-/* Hover effects */
-.shiki-tools .copy-button:hover,
-.shiki-tools .raw-button:hover,
-.shiki-tools .fa-list-ol:hover,
-.shiki-tools .fa-arrow-down-wide-short:hover,
-.shiki-tools .expand:hover {
-  color: #89b4fa;
-}
-
 /* ===== COPY NOTICE ===== */
 .shiki-tools .copy-notice {
   position: absolute;
-  color: #89b4fa;
-  background: var(--hltools-bg);
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
@@ -123,7 +108,6 @@ figure.shiki .shiki-tools.closed~* {
   font-size: 0.9em;
   font-weight: 500;
   padding: 0 10px;
-  color: var(--hltools-color);
   user-select: text;
   white-space: nowrap;
   overflow: hidden;
@@ -160,20 +144,7 @@ figure.shiki:hover .shiki-tools .code-lang {
   height: 12px;
   border-radius: 50%;
   margin-left: 8px;
-  background-color: #ddd;
   position: relative;
-}
-
-.traffic-light.red {
-  background-color: #f38ba8;
-}
-
-.traffic-light.yellow {
-  background-color: #fab387;
-}
-
-.traffic-light.green {
-  background-color: #a6e3a1;
 }
 
 /* Traffic light hover icons */
@@ -184,7 +155,6 @@ figure.shiki:hover .shiki-tools .code-lang {
   justify-content: center;
   width: 100%;
   height: 100%;
-  color: rgba(0, 0, 0, 0.6);
   font-weight: bold;
   font-size: 9px;
   font-family: "Lucida Grande", "Segoe UI", sans-serif;
@@ -201,14 +171,12 @@ figure.shiki:hover .shiki-tools .code-lang {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--hlexpand-bg);
   font-size: 1em;
   cursor: pointer;
 }
 
 .code-expand-btn i {
   padding: 6px 0;
-  color: var(--hlnumber-color);
   animation: code-expand-pulse 1.2s infinite;
 }
 
@@ -245,10 +213,8 @@ figure.shiki div.codeblock div {
 
 /* Line numbers (gutter) */
 figure.shiki .gutter pre {
-  margin-right: 8px !important;
-  padding: 0 8px !important;
-  background-color: var(--hlnumber-bg) !important;
-  color: var(--hlnumber-color) !important;
+  margin-right: 10px !important;
+  padding-left: 10px !important;
   text-align: right !important;
   user-select: none !important;
   border: none !important;
@@ -277,13 +243,6 @@ figure.shiki .code pre code {
 .code-expand-btn:not(.expand-done)~pre,
 .code-expand-btn:not(.expand-done)~* pre {
   overflow: hidden;
-}
-
-.code-expand-btn.expand-done+pre,
-.code-expand-btn.expand-done+* pre,
-.code-expand-btn.expand-done+div.codeblock,
-.code-expand-btn.expand-done+* div.codeblock {
-  margin-bottom: 1.8em;
 }
 
 .code-expand-btn.expand-done+pre,
