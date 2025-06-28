@@ -19,9 +19,9 @@ shiki:
   dark_theme: 'catppuccin-mocha'  # Shiki theme for dark mode.
 
   # --- Theme Integration ---
-  # The class name your theme adds to the <body> or <html> tag for dark mode.
+  # The class name your theme adds to <html> tag for dark mode.
   # This plugin will generate CSS to automatically switch themes based on this class.
-  # It supports both `body.dark` and `html[data-theme="dark"]` patterns.
+  # It supports both `html.dark` and `html[data-theme="dark"]` patterns.
   dark_mode_class: 'night' # Default is 'night'.
 
   # --- Display Settings ---

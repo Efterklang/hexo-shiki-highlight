@@ -256,7 +256,7 @@ if (settings) {
       if (settings.dark_mode_class) {
         const className = settings.dark_mode_class;
         // Use the :is() pseudo-class for a clean and correct selector group
-        const switcherSelector = `:is(body.${className}, html[data-theme="${className}"])`;
+        const switcherSelector = `:is(html.${className}, html[data-theme="${className}"])`;
         // Use a global regex to replace all occurrences of the placeholder
         colorCss = colorCss.replace(/\.theme-switcher-class/g, switcherSelector);
       }
