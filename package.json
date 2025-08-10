@@ -1,23 +1,36 @@
 {
   "name": "hexo-shiki-highlight",
-  "version": "1.2.5",
-  "main": "index.js",
+  "version": "2.0.1",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "code_block",
+    "LICENSE",
+    "README.md"
+  ],
   "keywords": [
     "hexo",
     "hexo-plugin"
   ],
   "scripts": {
-    "test": "echo \"No tests specified\" && exit 0",
-    "prepublishOnly": "echo \"Preparing for publish\"",
-    "postversion": "git push && git push --tags"
+    "build": "node ./build.mjs"
   },
   "author": "GnixAij",
   "license": "MIT",
   "description": "",
   "dependencies": {
     "hexo": "^7.3.0",
-    "shiki": "^1.29.1",
-    "@shikijs/transformers": "^1.29.1",
+    "hexo-util": "^3.3.0"
+  },
+  "devDependencies": {
+    "shiki": "3.8.1",
+    "@shikijs/transformers": "3.8.1",
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.8.0"
+  },
+  "peerDependencies": {
+    "hexo": "^7.0.0",
     "hexo-util": "^3.3.0"
   }
 }

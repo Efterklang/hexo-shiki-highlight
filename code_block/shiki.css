@@ -1,53 +1,27 @@
-/* ===== SCROLLBAR STYLES ===== */
-figure.shiki div.codeblock::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-figure.shiki div.codeblock::-webkit-scrollbar-thumb {
-  border-radius: 2.5px;
-}
-
 /* ===== MAIN CODE BLOCK FIGURE ===== */
 figure.shiki {
   margin: 0 0 24px;
-  padding: 0 !important;
   border-radius: 8px !important;
-  border-width: 1.5px;
-  border-style: solid;
-  line-height: 1.6;
-  position: relative;
+  border: 1.5px solid;
   overflow: auto;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
 }
 
-/* Hide content when toolbar is closed */
-figure.shiki .shiki-tools.closed~* {
-  display: none;
-}
-
-/* ===== TOOLBAR STYLES ===== */
 .shiki-tools {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   min-height: 30px;
-  height: 0.9em;
   padding: 0 15px;
-  border-radius: 35px 35px 0 0;
-  font-size: 1em;
+  font-family: 'Maple Mono CN', monospace;
+  font-weight: bolder;
   user-select: none;
   overflow: hidden;
   position: relative;
 }
 
-/* Toolbar sections */
 .shiki-tools .left,
 .shiki-tools .right {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
 }
 
 .shiki-tools .left {
@@ -69,7 +43,6 @@ figure.shiki .shiki-tools.closed~* {
 
 /* ===== INTERACTIVE ELEMENTS ===== */
 .shiki-tools .copy-button,
-.shiki-tools .raw-button,
 .shiki-tools .fa-list-ol,
 .shiki-tools .fa-arrow-down-wide-short,
 .shiki-tools .expand {
@@ -103,10 +76,8 @@ figure.shiki .shiki-tools.closed~* {
   visibility: visible;
 }
 
-/* ===== TITLE AND LANGUAGE STYLES ===== */
 .shiki-tools .code-title {
   font-size: 0.9em;
-  font-weight: 500;
   padding: 0 10px;
   user-select: text;
   white-space: nowrap;
@@ -115,23 +86,9 @@ figure.shiki .shiki-tools.closed~* {
   flex-shrink: 1;
 }
 
-.shiki-tools .code-lang {
-  padding-left: 5px;
-  font-size: 0.9em;
-  font-weight: 500;
-  opacity: 0;
-  visibility: hidden;
-  user-select: none;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-
-figure.shiki:hover .shiki-tools .code-lang {
-  opacity: 1;
-  visibility: visible;
-}
 
 /* ===== TRAFFIC LIGHTS ===== */
-.shiki-tools .left .traffic-lights {
+.traffic-lights {
   display: flex;
   align-items: center;
   padding-right: 8px;
@@ -139,27 +96,11 @@ figure.shiki:hover .shiki-tools .code-lang {
 }
 
 .traffic-light {
-  display: block;
   width: 12px;
   height: 12px;
   border-radius: 50%;
   margin-left: 8px;
   position: relative;
-}
-
-/* Traffic light hover icons */
-.traffic-light::after {
-  content: "";
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-weight: bold;
-  font-size: 9px;
-  font-family: "Lucida Grande", "Segoe UI", sans-serif;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
 }
 
 /* ===== EXPAND BUTTON ===== */
@@ -197,57 +138,88 @@ figure.shiki:hover .shiki-tools .code-lang {
 }
 
 /* ===== CODE BLOCK CONTENT ===== */
-figure.shiki div.codeblock {
-  margin: 0;
-  border: none;
-  border-radius: 0 0 8px 8px !important;
-  display: flex;
-  overflow: auto;
-  padding-bottom: 10px;
+pre.shiki span.line {
+  display: block;
+  width: fit-content;
+  min-width: 100%;
 }
 
-figure.shiki div.codeblock div {
-  padding: 0;
-  border: none;
-}
-
-/* Line numbers (gutter) */
-figure.shiki .gutter pre {
-  margin-right: 10px !important;
-  padding-left: 10px !important;
-  text-align: right !important;
-  user-select: none !important;
-  border: none !important;
-  border-radius: 0 !important;
-}
-
-/* Code content */
-figure.shiki pre {
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-}
-
-figure.shiki .code pre code {
-  margin: 0 !important;
+pre.shiki code {
+  text-align: left;
+  counter-reset: step;
+  counter-increment: step 0;
   padding: 0 !important;
   background: none !important;
   border: none !important;
-  font-size: 1em;
-  font-family: "Maple Mono CN", "Maple Mono NF CN", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace, 宋体;
-  line-height: 1;
-  overflow: auto !important;
+  width: 100%;
+  font-family: "Maple Mono CN", "Maple Mono NF CN", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace, å®‹ä½“;
 }
 
-/* Expand button interactions */
-.code-expand-btn:not(.expand-done)~pre,
-.code-expand-btn:not(.expand-done)~* pre {
-  overflow: hidden;
+pre.shiki code .line::before {
+  content: counter(step);
+  counter-increment: step;
+  width: 1.2rem;
+  margin-right: 1.2rem;
+  display: inline-block;
+  text-align: right;
+  color: rgba(115, 138, 148, .4)
 }
 
-.code-expand-btn.expand-done+pre,
-.code-expand-btn.expand-done+* pre,
-.code-expand-btn.expand-done+div.codeblock,
-.code-expand-btn.expand-done+* div.codeblock {
-  margin-bottom: 1.8em;
+/* #region Transformer */
+
+pre.shiki.has-highlighted code .line.highlighted {
+  display: inline-block;
+  width: fit-content;
+  min-width: 100%;
 }
+
+pre.shiki.has-diff code .line.diff.remove {
+  background-color: rgba(244, 63, 94, .2);
+}
+
+pre.shiki.has-diff code .line.diff.remove:before {
+  content: "-";
+  color: #EAB4BE;
+}
+
+pre.shiki.has-diff code .line.diff.add {
+  background-color: rgba(16, 185, 129, .2);
+}
+
+pre.shiki.has-diff code .line.diff.add:before {
+  content: "+";
+  color: #BED9BC;
+}
+
+pre.shiki.has-highlighted code .line.highlighted {
+  background-color: rgba(142, 150, 170, .2);
+}
+
+pre.shiki.has-highlighted code .line.highlighted.error {
+  background-color: rgba(244, 63, 94, .2);
+}
+
+pre.shiki.has-highlighted code .line.highlighted.warning {
+  background-color: rgba(234, 179, 8, .2);
+}
+
+pre.shiki code .highlighted-word {
+  background-color: rgba(255, 255, 0, .3);
+  border-radius: 4px;
+  margin: -1px -2px;
+  padding: 1px 2px;
+}
+
+pre.shiki.has-focused code .line {
+  filter: blur(3px);
+  opacity: .7;
+  transition: filter .35s, opacity .35s;
+}
+
+pre.shiki.has-focused:hover code .line,
+pre.shiki.has-focused code .line.focused {
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* #endregion */

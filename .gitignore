@@ -16,8 +16,13 @@ Thumbs.db
 
 .npm/
 .yarn/
-package-lock.json
-yarn.lock
+
+# 构建输出
+dist/
+*.map
+
+# 构建分析文件
+meta.json
 
 test/
 debug/

@@ -2,34 +2,13 @@
 const SELECTORS = {
   figureHighlight: 'figure.shiki',
   preCode: 'pre code',
-  codeblock: 'div.codeblock .code pre',
-  gutter: '.gutter',
-  gutterPre: '.gutter pre',
-  preShiki: 'pre.shiki',
-  expandBtn: '.code-expand-btn'
+  preShiki: 'pre.shiki'
 };
 
 const CLASSES = {
   copyTrue: 'copy-true',
   closed: 'closed',
-  expandDone: 'expand-done',
   wrapActive: 'wrap-active'
-};
-
-const ICONS = {
-  lineNumber: '<i class="fa-solid fa-list-ol" title="Toggle Line Numbers"></i>',
-  wrap: '<i class="fa-solid fa-arrow-down-wide-short" title="Toggle Wrap"></i>',
-  copy: '<div class="copy-notice"></div><i class="fas fa-paste copy-button"></i>',
-  raw: '<i class="fas fa-file-alt raw-button" title="View Raw"></i>',
-  expand: '<i class="fas fa-angle-down expand"></i>',
-  expandCode: '<i class="fas fa-angle-double-down"></i>',
-  trafficLights: `
-    <div class="traffic-lights">
-      <span class="traffic-light red"></span>
-      <span class="traffic-light yellow"></span>
-      <span class="traffic-light green"></span>
-    </div>
-  `
 };
 
 // Utility Functions
@@ -70,10 +49,10 @@ const CopyHandler = {
         this.fallbackCopy(text);
       }
       console.log('Text copied successfully:', text);
-      Utils.showAlert(noticeElement, CODE_CONFIG.copy.success);
+      Utils.showAlert(noticeElement, "Copied");
     } catch (err) {
       console.error('Failed to copy:', err);
-      Utils.showAlert(noticeElement, CODE_CONFIG.copy.error);
+      Utils.showAlert(noticeElement, "Copy failed!");
     }
   },
 
@@ -117,51 +96,12 @@ const FeatureHandlers = {
     Utils.toggleDisplay(siblings, isHidden);
   },
 
-  raw(element) {
-    const buttonParent = element.parentNode;
-    const codeElement = buttonParent.querySelector(SELECTORS.codeblock);
-
-    if (!codeElement) {
-      console.error('Code element not found!');
-      return;
-    }
-
-    const rawWindow = window.open();
-    if (!rawWindow) {
-      console.error('Failed to open window. Please allow pop-ups.');
-      return;
-    }
-
-    const preElement = rawWindow.document.createElement('pre');
-    preElement.textContent = codeElement.textContent;
-    rawWindow.document.body.appendChild(preElement);
-
-    // Style the new window
-    Object.assign(rawWindow.document.body.style, {
-      margin: '0',
-      padding: '1rem',
-      backgroundColor: '#f5f5f5',
-      fontFamily: 'monospace'
-    });
-    rawWindow.document.title = 'Code Raw Content';
-  },
-
-  toggleLineNumbers(element) {
-    const figure = element.closest(SELECTORS.figureHighlight);
-    const gutter = figure?.querySelector(SELECTORS.gutter);
-    if (gutter) {
-      gutter.style.display = gutter.style.display === 'none' ? '' : 'none';
-    }
-  },
-
   toggleWrap(element) {
     const figure = element.closest(SELECTORS.figureHighlight);
     const pre = figure?.querySelector(SELECTORS.preShiki);
     const code = pre?.querySelector('code');
-    const gutter = figure?.querySelector(SELECTORS.gutter);
-    const gutterPre = gutter?.querySelector('pre');
 
-    if (!pre || !code || !gutter || !gutterPre) {
+    if (!pre || !code) {
       console.error('Required elements not found!');
       return;
     }
@@ -169,13 +109,13 @@ const FeatureHandlers = {
     const isWrapped = pre.style.whiteSpace === 'pre-wrap';
 
     if (isWrapped) {
-      this.disableWrap(pre, code, gutterPre, element);
+      this.disableWrap(pre, code, element);
     } else {
-      this.enableWrap(pre, code, gutterPre, element);
+      this.enableWrap(pre, code, element);
     }
   },
 
-  disableWrap(pre, code, gutterPre, element) {
+  disableWrap(pre, code, element) {
     Object.assign(pre.style, { whiteSpace: 'pre' });
     Object.assign(code.style, {
       whiteSpace: 'pre',
@@ -183,16 +123,9 @@ const FeatureHandlers = {
       overflowWrap: 'normal'
     });
     element.classList.remove(CLASSES.wrapActive);
-
-    // Restore original line numbers
-    const lineCount = code.textContent.split('\n').length;
-    gutterPre.innerHTML = Array.from(
-      { length: lineCount },
-      (_, i) => `<span class="line">${i + 1}</span><br>`
-    ).join('');
   },
 
-  enableWrap(pre, code, gutterPre, element) {
+  enableWrap(pre, code, element) {
     Object.assign(pre.style, { whiteSpace: 'pre-wrap' });
     Object.assign(code.style, {
       whiteSpace: 'pre-wrap',
@@ -200,57 +133,6 @@ const FeatureHandlers = {
       overflowWrap: 'anywhere'
     });
     element.classList.add(CLASSES.wrapActive);
-
-    this.updateLineNumbers(pre, code, gutterPre);
-
-    // Add resize listener
-    const resizeHandler = () => {
-      if (pre.style.whiteSpace === 'pre-wrap') {
-        this.updateLineNumbers(pre, code, gutterPre);
-      }
-    };
-    window.addEventListener('resize', resizeHandler);
-  },
-
-  updateLineNumbers(pre, code, gutterPre) {
-    const lines = code.textContent.split('\n');
-    const tempContainer = Utils.createElement('div');
-
-    // Setup temp container for measurement
-    Object.assign(tempContainer.style, {
-      visibility: 'hidden',
-      position: 'absolute',
-      whiteSpace: 'pre-wrap',
-      wordBreak: 'break-all',
-      overflowWrap: 'anywhere',
-      font: window.getComputedStyle(code).font,
-      lineHeight: window.getComputedStyle(code).lineHeight,
-      width: `${code.getBoundingClientRect().width}px`,
-      paddingLeft: window.getComputedStyle(pre).paddingLeft,
-      paddingRight: window.getComputedStyle(pre).paddingRight
-    });
-
-    document.body.appendChild(tempContainer);
-
-    let lineNumbersHTML = '';
-    lines.forEach((line, i) => {
-      const tempLine = Utils.createElement('div');
-      tempLine.textContent = line || ' ';
-      tempContainer.appendChild(tempLine);
-
-      const lineHeight = tempLine.offsetHeight;
-      const singleLineHeight = parseInt(window.getComputedStyle(tempLine).lineHeight, 10);
-      const lineCount = Math.round(lineHeight / singleLineHeight);
-
-      for (let j = 0; j < lineCount; j++) {
-        lineNumbersHTML += `<span class="line">${j === 0 ? i + 1 : ''}</span><br>`;
-      }
-
-      tempContainer.removeChild(tempLine);
-    });
-
-    document.body.removeChild(tempContainer);
-    gutterPre.innerHTML = lineNumbersHTML;
   }
 };
 
@@ -262,8 +144,6 @@ function handleToolbarClick(event) {
   const handlers = {
     'expand': () => FeatureHandlers.shrink(this),
     'copy-button': () => FeatureHandlers.copy(this, target),
-    'raw-button': () => FeatureHandlers.raw(this),
-    'fa-list-ol': () => FeatureHandlers.toggleLineNumbers(this),
     'fa-arrow-down-wide-short': () => FeatureHandlers.toggleWrap(this)
   };
 
@@ -275,78 +155,17 @@ function handleToolbarClick(event) {
   }
 }
 
-// Expand code handler
-function handleExpandCode() {
-  this.classList.toggle(CLASSES.expandDone);
-}
-
-// Toolbar creation
-function createToolbar(lang, title, item) {
-  const fragment = document.createDocumentFragment();
-  const config = CODE_CONFIG;
-
-  // Toolbar is always shown
-  const toolbar = Utils.createElement('div', `shiki-tools ${config.isHighlightShrink === false ? CLASSES.closed : ''}`);
-
-  // Create sections
-  const leftSection = Utils.createElement('div', 'left');
-  const centerSection = Utils.createElement('div', 'center');
-  const rightSection = Utils.createElement('div', 'right');
-
-  // Build left section content
-  let leftHTML = ICONS.trafficLights;
-  if (config.highlightLang) leftHTML += lang.toUpperCase();
-  leftSection.innerHTML = leftHTML;
-
-  // Build center section
-  if (config.highlightTitle) centerSection.innerHTML = title;
-
-  // Build right section
-  let rightHTML = '';
-  if (config.highlightLineNumberToggle) rightHTML += ICONS.lineNumber;
-  if (config.highlightWrapToggle) rightHTML += ICONS.wrap;
-  if (config.highlightCopy) rightHTML += ICONS.copy;
-  if (config.highlightRaw) rightHTML += ICONS.raw;
-  if (config.isHighlightShrink !== undefined) {
-    rightHTML += `<i class="fas fa-angle-down expand ${config.isHighlightShrink === false ? CLASSES.closed : ''}"></i>`;
-  }
-  rightSection.innerHTML = rightHTML;
-
-  // Assemble toolbar
-  toolbar.appendChild(leftSection);
-  toolbar.appendChild(centerSection);
-  toolbar.appendChild(rightSection);
-  toolbar.addEventListener('click', handleToolbarClick);
-
-  fragment.appendChild(toolbar);
-
-  // Add expand button if height limit exceeded
-  if (config.highlightHeightLimit && item.offsetHeight > config.highlightHeightLimit + 30) {
-    const expandBtn = Utils.createElement('div', 'code-expand-btn', ICONS.expandCode);
-    expandBtn.addEventListener('click', handleExpandCode);
-    fragment.appendChild(expandBtn);
-  }
-
-  item.insertBefore(fragment, item.firstChild);
-}
-
 // Main initialization function
 function addHighlightTool() {
-  if (!CODE_CONFIG) return;
-
   const figures = document.querySelectorAll(SELECTORS.figureHighlight);
   if (!figures.length) return;
 
   figures.forEach(figure => {
-    // Extract language and title
-    const classList = figure.getAttribute('class').split(' ');
-    const lang = classList.length > 1 ? classList[1] : 'PlainText';
-    const title = figure.getAttribute('data_title') || '';
-
-    const langHTML = `<div class="code-lang">${lang}</div>`;
-    const titleHTML = title ? `<div class="code-title">${title}</div>` : '';
-
-    createToolbar(langHTML, titleHTML, figure);
+    // Add event listener to existing shiki-tools
+    const toolbar = figure.querySelector('.shiki-tools');
+    if (toolbar) {
+      toolbar.addEventListener('click', handleToolbarClick);
+    }
   });
 }
 

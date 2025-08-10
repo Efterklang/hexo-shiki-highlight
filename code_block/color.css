@@ -1,12 +1,3 @@
-/* 
-  This file defines the colors for the code block UI.
-  It uses CSS variables to allow for easy theme switching.
-  The :root block defines the default (light) theme.
-  The theme-switcher-class block defines the dark theme.
-  The actual class used for switching is configured in _config.yml
-  and injected by the plugin script.
-*/
-
 /* ===== COLOR VARIABLES ===== */
 :root {
     --hl-border-color: #ccd0da;
@@ -16,13 +7,14 @@
     --hl-tools-bg: #eff1f5;
     --hl-tools-color: #4b5563;
     --hl-tools-hover-color: #0ea5e9;
-    --hl-expand-bg: linear-gradient(180deg, hsla(220, 14%, 98%, 0), #f9fafb 70%);
-    --hl-number-bg: #eff1f5;
-    --hl-number-color: #9ca3af;
-    --hl-red: #d20f39
 }
 
-.theme-switcher-class {
+:is(html.night,
+    html[data-theme="night"],
+    html[data-theme="dark"],
+    html.dark,
+    .night,
+    .dark) {
     --hl-border-color: #313244;
     --hl-bg: #1e1e2e;
     --hl-color: #cdd6f4;
@@ -30,9 +22,6 @@
     --hl-tools-bg: #1e1e2e;
     --hl-tools-color: #bac2de;
     --hl-tools-hover-color: #89b4fa;
-    --hl-expand-bg: linear-gradient(180deg, hsla(240, 21%, 13%, 0), #1e1e2e 70%);
-    --hl-number-bg: #1e1e2e;
-    --hl-number-color: #6c7086;
 }
 
 /* ===== APPLYING COLORS ===== */
@@ -70,36 +59,26 @@ figure.shiki {
 }
 
 .traffic-light.red {
-    background-color: #f38ba8;
+    background-color: var(--ctp-red, #f38ba8);
 }
 
 .traffic-light.yellow {
-    background-color: #fab387;
+    background-color: var(--ctp-peach, #fab387);
 }
 
 .traffic-light.green {
-    background-color: #a6e3a1;
+    background-color: var(--ctp-green, #a6e3a1);
 }
 
 .traffic-light::after {
     color: rgba(0, 0, 0, 0.6);
 }
 
-.code-expand-btn {
-    background: var(--hl-expand-bg);
-}
-
-.code-expand-btn i {
-    color: var(--hl-number-color);
-}
-
-figure.shiki .gutter pre {
-    background-color: var(--hl-number-bg) !important;
-    color: var(--hl-number-color) !important;
-}
-
-/* This part is for Shiki's own theme switching for tokens */
-/* The 'theme-switcher-class' is a placeholder that will be replaced by the build script */
-.theme-switcher-class .shiki span {
-    color: var(--shiki-night) !important;
+:is(html.night,
+    html[data-theme="night"],
+    html[data-theme="dark"],
+    html.dark,
+    .night,
+    .dark) .shiki span {
+    color: var(--shiki-night, var(--shiki-dark)) !important;
 }
