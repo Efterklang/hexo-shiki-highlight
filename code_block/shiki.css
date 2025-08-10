@@ -234,7 +234,7 @@ figure.shiki .code pre code {
   background: none !important;
   border: none !important;
   font-size: 1em;
-  font-family: "Maple Mono NF CN", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace, 宋体;
+  font-family: "Maple Mono CN", "Maple Mono NF CN", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace, 宋体;
   line-height: 1;
   overflow: auto !important;
 }
