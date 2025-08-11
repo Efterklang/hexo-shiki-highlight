@@ -194,7 +194,10 @@ export async function init(hexo: Hexo): Promise<void> {
       let collapseAttributes = '';
 
       if (enableCollapse) {
-        const codeLines = cleanCode.split('\n').length;
+        // codeLines = span.line 的数量
+        const codeLines = highlightedHtml.match(/<span class="line/g)?.length || 0;
+
+        // console.log(`Detected ${codeLines} lines of code.`);
 
         if (codeLines > maxLines) {
           // 添加展开按钮和相关属性
