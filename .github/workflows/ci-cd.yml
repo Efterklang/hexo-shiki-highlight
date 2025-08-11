@@ -6,10 +6,6 @@ name: Node.js Package
 on:
   push:
     branches: [main, develop]
-    paths:
-      - "package.json"
-      - "src/**"
-      - ".github/workflows/**"
   pull_request:
     branches: [main]
 

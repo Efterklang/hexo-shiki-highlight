@@ -167,12 +167,6 @@ pre.shiki code .line::before {
 
 /* #region Transformer */
 
-pre.shiki.has-highlighted code .line.highlighted {
-  display: inline-block;
-  width: fit-content;
-  min-width: 100%;
-}
-
 pre.shiki.has-diff code .line.diff.remove {
   background-color: rgba(244, 63, 94, .2);
 }
