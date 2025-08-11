@@ -29,6 +29,12 @@ interface Config {
   highlight_title?: boolean;
   highlight_copy?: boolean;
   is_highlight_shrink?: boolean;
+  code_collapse?: {
+    enable?: boolean;
+    max_lines?: number;
+    show_lines?: number;
+    smart_scroll?: boolean;
+  };
   copy?: { success?: string; error?: string };
 }
 
@@ -175,12 +181,32 @@ export async function init(hexo: Hexo): Promise<void> {
 
       // 构建完整代码块
       const shikiToolsHtml = createShikiTools(lang, title);
-      const finalCodeBlock = `<figure class="shiki${lang ? ` ${lang}` : ""}" data_title="${title || ""}">
-    ${shikiToolsHtml}
-    ${highlightedHtml}
-  </figure>`;
 
-      return `${quote + ul + start}<hexoPostRenderCodeBlock>${finalCodeBlock}</hexoPostRenderCodeBlock>${end}`;
+      // 检查是否需要折叠代码
+      const collapseConfig = config.code_collapse || {};
+      const enableCollapse = collapseConfig.enable !== false;
+      const maxLines = collapseConfig.max_lines || 50;
+      const showLines = collapseConfig.show_lines || 10;
+      const smartScroll = collapseConfig.smart_scroll !== false; // 默认启用智能滚动
+
+      let finalHighlightedHtml = highlightedHtml;
+      let expandButton = '';
+      let collapseAttributes = '';
+
+      if (enableCollapse) {
+        const codeLines = cleanCode.split('\n').length;
+
+        if (codeLines > maxLines) {
+          // 添加展开按钮和相关属性
+          expandButton = `<div class="code-expand-btn"><i class="fas fa-angle-double-down"></i></div>`;
+          collapseAttributes = ` data-collapsible="true" data-max-lines="${maxLines}" data-show-lines="${showLines}" data-total-lines="${codeLines}" data-smart-scroll="${smartScroll}"`;
+        }
+      }
+
+      const finalCodeBlock = `<figure class="shiki${lang ? ` ${lang}` : ""}" data_title="${title || ""}"${collapseAttributes}>
+    ${shikiToolsHtml}
+    ${finalHighlightedHtml}${expandButton}
+  </figure>`;      return `${quote + ul + start}<hexoPostRenderCodeBlock>${finalCodeBlock}</hexoPostRenderCodeBlock>${end}`;
     });
   });
 }

@@ -14,6 +14,11 @@ Live Demo: https://vluv.space.Shiki_Demo/
 bun i hexo-shiki-highlight
 ```
 
+Stable version:
+
+- 2.0.2: Basic support for Shiki Transformers
+- 2.0.3: Support expand & fold code when it's to long
+
 ## Usage
 
 Add the following configuration to your Hexo `_config.yml`:
@@ -32,6 +37,13 @@ shiki:
 
   # --- Code Block Dimensions ---
   is_highlight_shrink: false # Shrink code block by default. Default is false.
+
+  # --- Code Collapse Settings ---
+  code_collapse:
+    enable: true # Enable code collapse feature. Default is true.
+    max_lines: 50 # Maximum lines to show before collapsing. Default is 50.
+    show_lines: 10 # Number of lines to show when collapsed. Default is 10.
+    smart_scroll: true # Enable smart scroll adjustment when collapsing. Default is true.
 
   # --- Advanced Settings ---
   exclude_languages: [] # Languages to exclude from Shiki highlighting.
