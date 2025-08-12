@@ -52,9 +52,8 @@
 figure.shiki {
   margin: 0 0 24px;
   border-radius: 8px !important;
-  border: 1.5px solid;
+  border: 1.5px solid var(--hl-border-color) !important;
   overflow: auto;
-  border-color: var(--hl-border-color);
   background: var(--hl-bg);
   color: var(--hl-color);
 }
@@ -257,10 +256,6 @@ figure.shiki[data-collapsible="true"].expanded pre.shiki::after {
   opacity: 0;
 }
 
-figure.shiki[data-collapsible="true"] .code-expand-btn {
-  transition: all 0.3s ease;
-}
-
 figure.shiki[data-collapsible="true"].expanded .code-expand-btn {
   transform: translateY(0);
 }
@@ -273,6 +268,10 @@ figure.shiki[data-collapsible="true"].expanded .code-expand-btn {
 }
 
 /* ===== CODE BLOCK CONTENT ===== */
+pre.shiki {
+  background: var(--hl-bg);
+}
+
 pre.shiki span.line {
   display: block;
   width: fit-content;
