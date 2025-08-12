@@ -268,7 +268,7 @@ figure.shiki[data-collapsible="true"].expanded .code-expand-btn {
 figure.shiki[data-collapsible="true"].expanded .code-expand-btn {
   position: static;
   margin-top: 10px;
-  background: var(--shiki-color-background, #1e1e2e);
+  background: var(--hl-bg);
   border-radius: 0 0 8px 8px;
 }
 
