@@ -5,7 +5,7 @@
 | ![image](https://github.com/user-attachments/assets/bc88dd30-e9f6-41d7-885c-b1c2a47cb45d) | ![image](https://github.com/user-attachments/assets/48a35dce-1304-4059-8ef1-6a929056e837) |
 | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 
-Live Demo: https://vluv.space.Shiki_Demo/
+Live Demo: [vluv.space/Shiki_Demo/](https://vluv.space/Shiki_Demo/)
 
 ## Install
 
