@@ -17,7 +17,7 @@ bun i hexo-shiki-highlight
 Stable version:
 
 - 2.0.2: Basic support for Shiki Transformers
-- 2.0.3: Support expand & fold code when it's to long
+- 2.1.0: Introduced more granular CSS variables for highlighting, diffs, and UI elements, using the Catppuccin color palette for both light and dark themes.
 
 ## Usage
 

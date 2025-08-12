@@ -1,9 +1,62 @@
+:root {
+  --hl-border-color: #ccd0da;
+  --hl-bg: #eff1f5;
+  --hl-bg1: rgba(239, 241, 245, 0.3);
+  --hl-color: #374151;
+  --hl-scrollbar-bg: #d1d5db;
+  --hl-tools-bg: #eff1f5;
+  --hl-tools-color: #4b5563;
+  --hl-tools-hover-color: #0ea5e9;
+  /* Catppuccin Latte - Code highlighting colors */
+  --hl-diff-remove-bg: rgba(210, 15, 57, 0.2);
+  --hl-diff-remove-color: #d20f39;
+  --hl-diff-add-bg: rgba(64, 160, 43, 0.2);
+  --hl-diff-add-color: #40a02b;
+  --hl-highlighted-bg: rgba(30, 102, 245, 0.2);
+  --hl-highlighted-error-bg: rgba(210, 15, 57, 0.2);
+  --hl-highlighted-warning-bg: rgba(223, 142, 29, 0.2);
+  --hl-highlighted-word-bg: rgba(223, 142, 29, 0.3);
+}
+
+:is(html.night,
+  html[data-theme="night"],
+  html[data-theme="dark"],
+  html.dark,
+  .night,
+  .dark) {
+  --hl-border-color: #313244;
+  --hl-bg: #1e1e2e;
+  --hl-bg1: rgba(30, 30, 46, 0.3);
+  --hl-color: #cdd6f4;
+  --hl-scrollbar-bg: #45475a;
+  --hl-tools-bg: #1e1e2e;
+  --hl-tools-color: #bac2de;
+  --hl-tools-hover-color: #89b4fa;
+
+  /* Catppuccin Mocha - Code highlighting colors */
+  --hl-diff-remove-bg: rgba(243, 139, 168, 0.2);
+  --hl-diff-remove-color: #f38ba8;
+  --hl-diff-add-bg: rgba(166, 227, 161, 0.2);
+  --hl-diff-add-color: #a6e3a1;
+  --hl-highlighted-bg: rgba(137, 180, 250, 0.2);
+  --hl-highlighted-error-bg: rgba(243, 139, 168, 0.2);
+  --hl-highlighted-warning-bg: rgba(249, 226, 175, 0.2);
+  --hl-highlighted-word-bg: rgba(249, 226, 175, 0.3);
+
+  .shiki span {
+    color: var(--shiki-dark) !important;
+  }
+}
+
 /* ===== MAIN CODE BLOCK FIGURE ===== */
 figure.shiki {
   margin: 0 0 24px;
   border-radius: 8px !important;
   border: 1.5px solid;
   overflow: auto;
+  border-color: var(--hl-border-color);
+  background: var(--hl-bg);
+  color: var(--hl-color);
 }
 
 .shiki-tools {
@@ -16,6 +69,25 @@ figure.shiki {
   user-select: none;
   overflow: hidden;
   position: relative;
+  background: var(--hl-tools-bg);
+  color: var(--hl-tools-color);
+}
+
+.shiki-tools .copy-button:hover,
+.shiki-tools .raw-button:hover,
+.shiki-tools .fa-list-ol:hover,
+.shiki-tools .fa-arrow-down-wide-short:hover,
+.shiki-tools .expand:hover {
+  color: var(--hl-tools-hover-color);
+}
+
+.shiki-tools .copy-notice {
+  color: var(--hl-tools-hover-color);
+  background: var(--hl-tools-bg);
+}
+
+.shiki-tools .code-title {
+  color: var(--hl-tools-color);
 }
 
 .shiki-tools .left,
@@ -103,6 +175,22 @@ figure.shiki {
   position: relative;
 }
 
+.traffic-light.red {
+  background-color: var(--ctp-red, #f38ba8);
+}
+
+.traffic-light.yellow {
+  background-color: var(--ctp-peach, #fab387);
+}
+
+.traffic-light.green {
+  background-color: var(--ctp-green, #a6e3a1);
+}
+
+.traffic-light::after {
+  color: rgba(0, 0, 0, 0.6);
+}
+
 /* ===== EXPAND BUTTON ===== */
 .code-expand-btn {
   position: absolute;
@@ -156,11 +244,11 @@ figure.shiki[data-collapsible="true"]:not(.expanded) pre.shiki::after {
   left: 0;
   right: 0;
   height: 80px;
-  background: linear-gradient(transparent 0%,
-      rgba(30, 30, 46, 0.3) 30%,
-      var(--shiki-color-background, #1e1e2e) 100%);
   pointer-events: none;
   z-index: 1;
+  background: linear-gradient(transparent 0%,
+      var(--hl-bg1), 30%,
+      var(--hl-bg) 100%);
   opacity: 1;
   transition: opacity 0.3s ease;
 }
@@ -213,39 +301,39 @@ pre.shiki code .line::before {
 }
 
 /* #region Transformer */
-
+/* ===== CODE HIGHLIGHTING COLORS ===== */
 pre.shiki.has-diff code .line.diff.remove {
-  background-color: rgba(244, 63, 94, .2);
+  background-color: var(--hl-diff-remove-bg);
 }
 
 pre.shiki.has-diff code .line.diff.remove:before {
   content: "-";
-  color: #EAB4BE;
+  color: var(--hl-diff-remove-color);
 }
 
 pre.shiki.has-diff code .line.diff.add {
-  background-color: rgba(16, 185, 129, .2);
+  background-color: var(--hl-diff-add-bg);
 }
 
 pre.shiki.has-diff code .line.diff.add:before {
   content: "+";
-  color: #BED9BC;
+  color: var(--hl-diff-add-color);
 }
 
 pre.shiki.has-highlighted code .line.highlighted {
-  background-color: rgba(142, 150, 170, .2);
+  background-color: var(--hl-highlighted-bg);
 }
 
 pre.shiki.has-highlighted code .line.highlighted.error {
-  background-color: rgba(244, 63, 94, .2);
+  background-color: var(--hl-highlighted-error-bg);
 }
 
 pre.shiki.has-highlighted code .line.highlighted.warning {
-  background-color: rgba(234, 179, 8, .2);
+  background-color: var(--hl-highlighted-warning-bg);
 }
 
 pre.shiki code .highlighted-word {
-  background-color: rgba(255, 255, 0, .3);
+  background-color: var(--hl-highlighted-word-bg);
   border-radius: 4px;
   margin: -1px -2px;
   padding: 1px 2px;
@@ -262,5 +350,3 @@ pre.shiki.has-focused code .line.focused {
   filter: blur(0);
   opacity: 1;
 }
-
-/* #endregion */

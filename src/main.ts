@@ -75,12 +75,11 @@ export async function init(hexo: Hexo): Promise<void> {
   // 生成静态资源文件
   hexo.extend.generator.register("shiki_assets", () => {
     const shikiCss = readFileSync(join(__dirname, "../code_block/shiki.css"), "utf-8");
-    let colorCss = readFileSync(join(__dirname, "../code_block/color.css"), "utf-8");
 
     return [
       {
         path: "css/code_block/shiki.css",
-        data: () => shikiCss + "\n" + colorCss,
+        data: () => shikiCss,
       },
       {
         path: "js/code_block/shiki.js",
