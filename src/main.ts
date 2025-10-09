@@ -17,6 +17,8 @@ import {
   transformerRemoveNotationEscape,
   transformerRenderWhitespace,
 } from "@shikijs/transformers";
+import { transformerColorizedBrackets } from '@shikijs/colorized-brackets'
+import { codeToHtml } from 'shiki'
 
 interface Config {
   light_theme?: string;
@@ -52,6 +54,7 @@ const SUPPORTED_TRANSFORMERS: ShikiTransformer[] = [
   transformerRemoveLineBreak(),
   transformerRemoveNotationEscape(),
   transformerRenderWhitespace(),
+  transformerColorizedBrackets(),
 ];
 
 export async function init(hexo: Hexo): Promise<void> {

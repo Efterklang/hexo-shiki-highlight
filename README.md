@@ -1,29 +1,24 @@
 # Intro
 
-个人博客[vluv's space](https://vluv.space/)使用的代码高亮插件，基于 [Shiki](https://shiki.style/) 实现。
+个人博客[vluv's space](https://vluv.space/)使用的代码高亮插件，基于 [Shiki](https://shiki.style/) 实现。[^1]
 
-| ![image](https://github.com/user-attachments/assets/bc88dd30-e9f6-41d7-885c-b1c2a47cb45d) | ![image](https://github.com/user-attachments/assets/48a35dce-1304-4059-8ef1-6a929056e837) |
-| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+[^1]: For live demo, see [vluv.space/Shiki_Demo](https://vluv.space/Shiki_Demo/); For changelog see, [CHANGELOG.md](./CHANGELOG.md)
 
-Live Demo: [vluv.space/Shiki_Demo/](https://vluv.space/Shiki_Demo/)
+
+| <img width="1386" height="720" alt="image" src="https://github.com/user-attachments/assets/a7e7bc23-3d24-4f65-b9fc-1d7452fcf200" /> | <img width="1394" height="736" alt="image" src="https://github.com/user-attachments/assets/677ca7d3-2b76-4cb6-8392-2de07b2b4406" /> |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+
+<img width="2922" height="1854" alt="image" src="https://github.com/user-attachments/assets/06604568-d87e-4549-8c9e-339bc8b6d753" />
 
 ## Install
 
 ```bash
-# 使用 Bun (推荐)
 bun i hexo-shiki-highlight
 ```
 
-Stable version:
-
-- 2.0.2: Basic support for Shiki Transformers
-- 2.1.0: Introduced more granular CSS variables for highlighting, diffs, and UI elements, using the Catppuccin color palette for both light and dark themes.
-
-## Usage
-
 Add the following configuration to your Hexo `_config.yml`:
 
-```yaml
+```yaml _config.yml
 shiki:
   light_theme: 'catppuccin-latte' # Shiki theme for light mode.
   dark_theme: 'catppuccin-mocha'  # Shiki theme for dark mode.
@@ -32,7 +27,7 @@ shiki:
   line_number: true # Show line numbers. Default is true.
   highlight_wrap_toggle: true # Show wrap toggle button. Default is true.
   highlight_lang: true # Show language name. Default is true.
-  highlight_title: true # Show code block title (if any). Default is true.
+  highlight_title: true # Show code block title (if any). Default is true.l
   highlight_copy: true # Show copy button. Default is true.
 
   # --- Code Block Dimensions ---
@@ -53,6 +48,14 @@ shiki:
 
 Supported themes & language can be found at [Shiki Themes](https://shiki.style/themes) & [Shiki Languages](https://shiki.style/languages).
 
+## Dev
+
+```shell
+$ git clone https://github.com/Efterklang/hexo-shiki-highlight.git ~/Projects/hexo-dev/hexo-shiki-highlight
+$ cd blog
+$ bun i ~/Projects/hexo-dev/hexo-shiki-highlight
+$ hexo s
+```
 ## Refs
 
 - [github.com/nova1751/hexo-shiki-plugin](https://github.com/nova1751/hexo-shiki-plugin)

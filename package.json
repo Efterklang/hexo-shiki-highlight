@@ -1,6 +1,6 @@
 {
   "name": "hexo-shiki-highlight",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "main": "dist/index.js",
   "files": [
     "dist",
@@ -23,10 +23,11 @@
     "hexo-util": "^3.3.0"
   },
   "devDependencies": {
-    "shiki": "3.8.1",
-    "@shikijs/transformers": "3.8.1",
+    "@shikijs/colorized-brackets": "^3.13.0",
+    "@shikijs/transformers": "3.13.0",
     "@types/node": "^22.0.0",
     "esbuild": "^0.25.0",
+    "shiki": "3.13.0",
     "typescript": "^5.8.0"
   },
   "peerDependencies": {

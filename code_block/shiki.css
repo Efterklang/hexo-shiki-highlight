@@ -286,7 +286,7 @@ pre.shiki code {
   background: none !important;
   border: none !important;
   width: 100%;
-  font-family: "Maple Mono CN", "Maple Mono NF CN", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace, å®‹ä½“;
+  font-family: "Maple Mono CN", "Maple Mono NF CN", "SF Pro", "Fira Code", "JetbrainsMono Nerd Font", Menlo, "DejaVu Sans Mono", monospace;
 }
 
 pre.shiki code .line::before {
