@@ -301,37 +301,37 @@ pre.shiki code .line::before {
 
 /* #region Transformer */
 /* ===== CODE HIGHLIGHTING COLORS ===== */
-pre.shiki.has-diff code .line.diff.remove {
+span.line.diff.remove {
   background-color: var(--hl-diff-remove-bg);
 }
 
-pre.shiki.has-diff code .line.diff.remove:before {
+span.line.diff.remove:before {
   content: "-";
   color: var(--hl-diff-remove-color);
 }
 
-pre.shiki.has-diff code .line.diff.add {
+span.line.diff.add {
   background-color: var(--hl-diff-add-bg);
 }
 
-pre.shiki.has-diff code .line.diff.add:before {
+span.line.diff.add:before {
   content: "+";
   color: var(--hl-diff-add-color);
 }
 
-pre.shiki.has-highlighted code .line.highlighted {
+span.line.highlighted {
   background-color: var(--hl-highlighted-bg);
 }
 
-pre.shiki.has-highlighted code .line.highlighted.error {
+span.line.highlighted.error {
   background-color: var(--hl-highlighted-error-bg);
 }
 
-pre.shiki.has-highlighted code .line.highlighted.warning {
+span.line.highlighted.warning {
   background-color: var(--hl-highlighted-warning-bg);
 }
 
-pre.shiki code .highlighted-word {
+span.highlighted-word {
   background-color: var(--hl-highlighted-word-bg);
   border-radius: 4px;
   margin: -1px -2px;
