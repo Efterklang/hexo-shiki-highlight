@@ -18,7 +18,6 @@ import {
   transformerRenderWhitespace,
 } from "@shikijs/transformers";
 import { transformerColorizedBrackets } from '@shikijs/colorized-brackets'
-import { codeToHtml } from 'shiki'
 
 interface Config {
   light_theme?: string;
@@ -59,7 +58,6 @@ const SUPPORTED_TRANSFORMERS: ShikiTransformer[] = [
 
 export async function init(hexo: Hexo): Promise<void> {
   const config = (hexo.config.shiki as Config) || {};
-
   // 配置默认值
   const lightTheme = config.light_theme || "catppuccin-latte";
   const darkTheme = config.night_theme || "catppuccin-mocha";
@@ -69,6 +67,7 @@ export async function init(hexo: Hexo): Promise<void> {
 
   const highlighter = await createHighlighter({
     themes: [lightTheme, darkTheme],
+    langAlias: Object.fromEntries(aliases),
     langs: Object.keys(bundledLanguages),
   });
 
@@ -121,19 +120,10 @@ export async function init(hexo: Hexo): Promise<void> {
       if (excludes.includes(lang)) {
         highlightedHtml = `<pre><code class="${lang}">${escapeHTML(cleanCode)}</code></pre>`;
       } else {
-        // 处理语言别名和大小写规范化
-        const normalizedLang = lang?.toLowerCase() || "";
-        let actualLang = aliases.get(normalizedLang) || normalizedLang || "text";
-
-        // 验证语言是否被 Shiki 支持，如果不支持则回退到 text
-        if (actualLang !== "text" && !Object.keys(bundledLanguages).includes(actualLang)) {
-          console.warn(`Language '${actualLang}' not supported by Shiki, falling back to 'text'`);
-          actualLang = "text";
-        }
 
         try {
           let html = highlighter.codeToHtml(cleanCode, {
-            lang: actualLang,
+            lang: lang,
             themes: { light: lightTheme, dark: darkTheme },
             transformers: enableTransformers ? SUPPORTED_TRANSFORMERS : []
           });
@@ -198,8 +188,6 @@ export async function init(hexo: Hexo): Promise<void> {
       if (enableCollapse) {
         // codeLines = span.line 的数量
         const codeLines = highlightedHtml.match(/<span class="line/g)?.length || 0;
-
-        // console.log(`Detected ${codeLines} lines of code.`);
 
         if (codeLines > maxLines) {
           // 添加展开按钮和相关属性

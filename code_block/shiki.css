@@ -62,7 +62,7 @@ figure.shiki {
   justify-content: space-between;
   min-height: 30px;
   padding: 0 15px;
-  font-family: 'Maple Mono CN', monospace;
+  font-family: 'Maple Mono NF CN', 'Maple Mono CN', monospace;
   font-weight: bolder;
   user-select: none;
   overflow: hidden;
@@ -196,13 +196,13 @@ figure.shiki[data-collapsible="true"] {
   position: relative;
 }
 
-figure.shiki[data-collapsible="true"] pre.shiki {
+figure.shiki[data-collapsible="true"]>pre.shiki {
   position: relative;
   overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: max-height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-figure.shiki[data-collapsible="true"]:not(.expanded) pre.shiki::after {
+figure.shiki[data-collapsible="true"]:not(.expanded)>pre.shiki::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -215,22 +215,10 @@ figure.shiki[data-collapsible="true"]:not(.expanded) pre.shiki::after {
       var(--hl-bg1), 30%,
       var(--hl-bg) 100%);
   opacity: 1;
-  transition: opacity 0.3s ease;
 }
 
-figure.shiki[data-collapsible="true"].expanded pre.shiki::after {
-  opacity: 0;
-}
-
-figure.shiki[data-collapsible="true"].expanded .code-expand-btn {
+figure.shiki[data-collapsible="true"].expanded>.code-expand-btn {
   transform: translateY(0);
-}
-
-figure.shiki[data-collapsible="true"].expanded .code-expand-btn {
-  position: static;
-  margin-top: 10px;
-  background: var(--hl-bg);
-  border-radius: 0 0 8px 8px;
 }
 
 /* ===== CODE BLOCK CONTENT ===== */
@@ -305,14 +293,14 @@ span.highlighted-word {
   padding: 1px 2px;
 }
 
-pre.shiki.has-focused code {
-  .line {
+pre.shiki.has-focused>code {
+  >.line {
     filter: blur(3px);
     opacity: .7;
     transition: filter .35s, opacity .35s;
   }
 
-  .line.focused,
+  >.line.focused,
   &:hover .line {
     filter: blur(0);
     opacity: 1;

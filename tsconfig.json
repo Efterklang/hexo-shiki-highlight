@@ -12,6 +12,7 @@
         "declaration": true,
         "declarationMap": false,
         "sourceMap": false,
+        "removeComments": true,
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "resolveJsonModule": true
