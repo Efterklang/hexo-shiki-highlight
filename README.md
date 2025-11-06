@@ -1,14 +1,15 @@
-# Intro
+## Preview
 
-个人博客[vluv's space](https://vluv.space/)使用的代码高亮插件，基于 [Shiki](https://shiki.style/) 实现。[^1]
+Dark & Light Theme
 
-[^1]: For live demo, see [vluv.space/Shiki_Demo](https://vluv.space/shiki_highlight/); For changelog see, [CHANGELOG.md](./CHANGELOG.md)
+| ![light](assets/README/light.png) | ![dark](assets/README/dark.png) |
+| --------------------------------- | ------------------------------- |
 
+Transformers Preview
 
-| <img width="1386" height="720" alt="image" src="https://github.com/user-attachments/assets/a7e7bc23-3d24-4f65-b9fc-1d7452fcf200" /> | <img width="1394" height="736" alt="image" src="https://github.com/user-attachments/assets/677ca7d3-2b76-4cb6-8392-2de07b2b4406" /> |
-| ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+![transformer](assets/README/transformer.png)
 
-<img width="2922" height="1854" alt="image" src="https://github.com/user-attachments/assets/06604568-d87e-4549-8c9e-339bc8b6d753" />
+For live Preview, check my [blog](https://vluv.space/shiki_highlight/)
 
 ## Install
 
@@ -19,44 +20,51 @@ bun i hexo-shiki-highlight
 Add the following configuration to your Hexo `_config.yml`:
 
 ```yaml _config.yml
+syntax_highlighter: shiki
+```
+
+If you want to customize the highlighter settings, add a `shiki` section in `_config.yml` like below:
+
+```yaml _config.yml
 shiki:
-  light_theme: 'catppuccin-latte' # Shiki theme for light mode.
-  dark_theme: 'catppuccin-mocha'  # Shiki theme for dark mode.
+  light_theme: 'catppuccin-latte'
+  dark_theme: 'catppuccin-mocha'
 
-  # --- Display Settings ---
-  line_number: true # Show line numbers. Default is true.
-  highlight_wrap_toggle: true # Show wrap toggle button. Default is true.
-  highlight_lang: true # Show language name. Default is true.
-  highlight_title: true # Show code block title (if any). Default is true.l
-  highlight_copy: true # Show copy button. Default is true.
+  toolbar_items:
+    lang: true
+    title: true
+    wrapToggle: true
+    copyButton: true
+    shrinkButton: true # toggle code collapse/expand
 
-  # --- Code Block Dimensions ---
-  is_highlight_shrink: false # Shrink code block by default. Default is false.
-
-  # --- Code Collapse Settings ---
   code_collapse:
     enable: true # Enable code collapse feature. Default is true.
-    max_lines: 50 # Maximum lines to show before collapsing. Default is 50.
+    max_lines: 20 # Maximum lines to show before collapsing. Default is 20.
     show_lines: 10 # Number of lines to show when collapsed. Default is 10.
-    smart_scroll: true # Enable smart scroll adjustment when collapsing. Default is true.
 
   # --- Advanced Settings ---
-  exclude_languages: [] # Languages to exclude from Shiki highlighting.
-  language_aliases: {} # Language aliases. e.g., { "vue": "html" }
-  enable_transformers: false # default true
+  exclude_languages: ['mermaid'] # Languages to exclude from Shiki highlighting.
+  language_aliases: {
+    'sh': 'bash'
+  }
+  enable_transformers: true
 ```
 
 Supported themes & language can be found at [Shiki Themes](https://shiki.style/themes) & [Shiki Languages](https://shiki.style/languages).
 
 ## Dev
 
+For development purpose, you can clone the repo and link it locally:
+
 ```shell
 $ git clone https://github.com/Efterklang/hexo-shiki-highlight.git ~/Projects/hexo-dev/hexo-shiki-highlight
-$ cd blog
+$ cd path_to_your_hexo_blog
 $ bun i ~/Projects/hexo-dev/hexo-shiki-highlight
+$ hexo clean
 $ hexo s
 ```
-## Refs
+
+## Thanks to
 
 - [github.com/nova1751/hexo-shiki-plugin](https://github.com/nova1751/hexo-shiki-plugin)
 - [github.com/HPCesia/hexo-highlighter-shiki](https://github.com/HPCesia/hexo-highlighter-shiki)

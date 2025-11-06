@@ -1,6 +1,7 @@
 "use strict";
 import { bundledLanguages, createHighlighter, ShikiTransformer } from "shiki";
 import type Hexo from "hexo";
+import { HighlightOptions } from "hexo/dist/extend/syntax_highlight";
 import { escapeHTML } from "hexo-util";
 import { readFileSync, createReadStream } from "fs";
 import { join } from "path";
@@ -25,21 +26,20 @@ interface Config {
   exclude_languages?: string[];
   language_aliases?: Record<string, string>;
   enable_transformers?: boolean;
-  highlight_wrap_toggle?: boolean;
-  highlight_lang?: boolean;
-  highlight_title?: boolean;
-  highlight_copy?: boolean;
-  is_highlight_shrink?: boolean;
   code_collapse?: {
     enable?: boolean;
     max_lines?: number;
     show_lines?: number;
-    smart_scroll?: boolean;
+  };
+  toolbar_items?: {
+    lang?: boolean;
+    title?: boolean;
+    wrapToggle?: boolean;
+    copyButton?: boolean;
+    shrinkButton?: boolean;
   };
   copy?: { success?: string; error?: string };
 }
-
-const CODE_REGEX = /(?<quote>[> ]*)(?<ul>(-|\d+\.)?)(?<start>\s*)(?<tick>~{3,}|`{3,}) *(?<lang>\S+)? *(?<title>.*?)\n(?<code>[\s\S]*?)\k<quote>\s*\k<tick>(?<end>\s*)$/gm;
 
 const SUPPORTED_TRANSFORMERS: ShikiTransformer[] = [
   transformerCompactLineOptions(),
@@ -56,6 +56,39 @@ const SUPPORTED_TRANSFORMERS: ShikiTransformer[] = [
   transformerColorizedBrackets(),
 ];
 
+function createShikiTools(lang: string, title: string, displayItems: any): string {
+  const leftSection = `<div class="left">
+    <div class="traffic-lights">
+      <span class="traffic-light red"></span>
+      <span class="traffic-light yellow"></span>
+      <span class="traffic-light green"></span>
+    </div>
+    ${displayItems.lang ? `<div class="code-lang">${lang.toUpperCase()}</div>` : ''}
+  </div>`;
+
+  const centerSection = `<div class="center">
+    ${displayItems.title && title ? `<div class="code-title">${title}</div>` : ''}
+  </div>`;
+
+  let rightButtons = '';
+  if (displayItems.wrapToggle) {
+    rightButtons += '<i class="fa-solid fa-arrow-down-wide-short" title="Toggle Wrap"></i>';
+  }
+  if (displayItems.copyButton) {
+    rightButtons += '<div class="copy-notice"></div><i class="fas fa-paste copy-button"></i>';
+  }
+  if (displayItems.shrinkButton !== undefined) {
+    const closedClass = displayItems.shrinkButton === false ? ' closed' : '';
+    rightButtons += `<i class="fas fa-angle-down expand${closedClass}"></i>`;
+  }
+
+  const rightSection = `<div class="right">${rightButtons}</div>`;
+
+  const closedClass = displayItems.shrinkButton === false ? ' closed' : '';
+  return `<div class="shiki-tools${closedClass}">${leftSection}${centerSection}${rightSection}</div>`;
+};
+
+
 export async function init(hexo: Hexo): Promise<void> {
   const config = (hexo.config.shiki as Config) || {};
   // 配置默认值
@@ -71,7 +104,14 @@ export async function init(hexo: Hexo): Promise<void> {
     langs: Object.keys(bundledLanguages),
   });
 
-  // 设置全局变量
+  const toolbarItems = {
+    lang: config.toolbar_items?.lang ?? true,
+    title: config.toolbar_items?.title ?? true,
+    wrapToggle: config.toolbar_items?.wrapToggle ?? true,
+    copyButton: config.toolbar_items?.copyButton ?? true,
+    shrinkButton: config.toolbar_items?.shrinkButton ?? true,
+  };
+
   (global as any).hexo = hexo;
 
   // 生成静态资源文件
@@ -96,110 +136,43 @@ export async function init(hexo: Hexo): Promise<void> {
   hexo.extend.injector.register("body_end",
     () => `<script src="${hexo.config.root}js/code_block/shiki.js"></script>`);
 
-  // 注册markdown处理过滤器 - 主要业务逻辑
-  hexo.extend.filter.register("before_post_render", (post: any) => {
-    post.content = post.content.replace(CODE_REGEX, (...args: any[]) => {
-      const groups = args.pop();
-      const { quote, ul, start, end, lang = "", title = "", code } = groups;
-
-      // 处理代码缩进
-      const indentMatch = code.match(/^[ \t]*/);
-      const indent = indentMatch ? indentMatch[0].length : 0;
-      const cleanCode = code
-        .split("\n")
-        .map((line: string) =>
-          line.slice(Math.min(indent, line.match(/^[ \t]*/)?.[0].length || 0))
-        )
-        .join("\n")
-        .replace(new RegExp(`^${quote.trimEnd()}`, "gm"), "");
-
-      // 代码高亮处理 - 内联逻辑
-      let highlightedHtml: string;
-
-      // 检查是否为排除的语言
-      if (excludes.includes(lang)) {
-        highlightedHtml = `<pre><code class="${lang}">${escapeHTML(cleanCode)}</code></pre>`;
-      } else {
-
-        try {
-          let html = highlighter.codeToHtml(cleanCode, {
-            lang: lang,
-            themes: { light: lightTheme, dark: darkTheme },
-            transformers: enableTransformers ? SUPPORTED_TRANSFORMERS : []
-          });
-
-          // 清理内联样式
-          highlightedHtml = html.replace(/<pre[^>]*>/, (match: string) =>
-            match.replace(/\s*style\s*=\s*"[^"]*"\s*tabindex="0"/, "")
-          );
-        } catch (error) {
-          console.warn(`Highlighting failed for ${lang}:`, error);
-          highlightedHtml = `<pre><code class="${lang}">${escapeHTML(cleanCode)}</code></pre>`;
-        }
-      }
-
-      // 生成 shiki-tools HTML
-      const createShikiTools = (lang: string, title: string) => {
-        const leftSection = `<div class="left">
-          <div class="traffic-lights">
-            <span class="traffic-light red"></span>
-            <span class="traffic-light yellow"></span>
-            <span class="traffic-light green"></span>
-          </div>
-          ${config.highlight_lang ? `<div class="code-lang">${lang.toUpperCase()}</div>` : ''}
-        </div>`;
-
-        const centerSection = `<div class="center">
-          ${config.highlight_title && title ? `<div class="code-title">${title}</div>` : ''}
-        </div>`;
-
-        let rightButtons = '';
-        if (config.highlight_wrap_toggle) {
-          rightButtons += '<i class="fa-solid fa-arrow-down-wide-short" title="Toggle Wrap"></i>';
-        }
-        if (config.highlight_copy) {
-          rightButtons += '<div class="copy-notice"></div><i class="fas fa-paste copy-button"></i>';
-        }
-        if (config.is_highlight_shrink !== undefined) {
-          const closedClass = config.is_highlight_shrink === false ? ' closed' : '';
-          rightButtons += `<i class="fas fa-angle-down expand${closedClass}"></i>`;
-        }
-
-        const rightSection = `<div class="right">${rightButtons}</div>`;
-
-        const closedClass = config.is_highlight_shrink === false ? ' closed' : '';
-        return `<div class="shiki-tools${closedClass}">${leftSection}${centerSection}${rightSection}</div>`;
-      };
-
-      // 构建完整代码块
-      const shikiToolsHtml = createShikiTools(lang, title);
-
-      // 检查是否需要折叠代码
-      const collapseConfig = config.code_collapse || {};
-      const enableCollapse = collapseConfig.enable !== false;
-      const maxLines = collapseConfig.max_lines || 50;
-      const showLines = collapseConfig.show_lines || 10;
-      const smartScroll = collapseConfig.smart_scroll !== false; // 默认启用智能滚动
-
-      let finalHighlightedHtml = highlightedHtml;
-      let expandButton = '';
-      let collapseAttributes = '';
-
-      if (enableCollapse) {
-        // codeLines = span.line 的数量
-        const codeLines = highlightedHtml.match(/<span class="line/g)?.length || 0;
-
-        if (codeLines > maxLines) {
-          // 添加展开按钮和相关属性
-          expandButton = `<div class="code-expand-btn"><i class="fas fa-angle-double-down"></i></div>`;
-          collapseAttributes = ` data-collapsible="true" data-max-lines="${maxLines}" data-show-lines="${showLines}" data-total-lines="${codeLines}" data-smart-scroll="${smartScroll}"`;
-        }
-      }
-
-      const finalCodeBlock = `<figure class="shiki${lang ? ` ${lang}` : ""}" data_title="${title || ""}"${collapseAttributes}>
-    ${shikiToolsHtml}
-    ${finalHighlightedHtml}${expandButton}
-  </figure>`;      return `${quote + ul + start}<hexoPostRenderCodeBlock>${finalCodeBlock}</hexoPostRenderCodeBlock>${end}`;
+  const hexo_highlighter = (code: string, options: HighlightOptions) => {
+    if (excludes.includes(options.lang || "")) {
+      return `<pre><code class="${options.lang}">${escapeHTML(code)}</code></pre>`;
+    }
+    let code_html = highlighter.codeToHtml(code, {
+      lang: options.lang || "",
+      themes: { light: lightTheme, dark: darkTheme },
+      transformers: enableTransformers ? SUPPORTED_TRANSFORMERS : []
     });
-  });
+    // rm inline-styles added by shiki
+    code_html = code_html.replace(/<pre[^>]*>/, (match: string) =>
+      match.replace(/\s*style\s*=\s*"[^"]*"\s*tabindex="0"/, "")
+    );
+    let shikiToolsHtml = createShikiTools(options.lang || "", options.caption || "", toolbarItems);
+
+    const collapseConfig = config.code_collapse || {};
+    const enableCollapse = collapseConfig.enable !== false;
+    const maxLines = collapseConfig.max_lines || 20;
+    const showLines = collapseConfig.show_lines || 10;
+
+    let finalHighlightedHtml = code_html;
+    let expandButton = '';
+    let collapseAttributes = '';
+
+    if (enableCollapse) {
+      // codeLines = span.line 的数量
+      const codeLines = code_html.match(/<span class="line/g)?.length || 0;
+
+      if (codeLines > maxLines) {
+        // 添加展开按钮和相关属性
+        expandButton = `<div class="code-expand-btn"><i class="fas fa-angle-double-down"></i></div>`;
+        collapseAttributes = ` data-collapsible="true" data-max-lines="${maxLines}" data-show-lines="${showLines}" data-total-lines="${codeLines}"`;
+      }
+    }
+
+    return `<figure class="shiki${options.lang ? ` ${options.lang}` : ""}" data_title="${options.caption || ""}"${collapseAttributes}> ${shikiToolsHtml} ${finalHighlightedHtml}${expandButton} </figure>`;
+  };
+
+  hexo.extend.highlight.register("shiki", hexo_highlighter);
 }
