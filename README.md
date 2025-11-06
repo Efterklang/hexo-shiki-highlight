@@ -2,7 +2,7 @@
 
 个人博客[vluv's space](https://vluv.space/)使用的代码高亮插件，基于 [Shiki](https://shiki.style/) 实现。[^1]
 
-[^1]: For live demo, see [vluv.space/Shiki_Demo](https://vluv.space/Shiki_Demo/); For changelog see, [CHANGELOG.md](./CHANGELOG.md)
+[^1]: For live demo, see [vluv.space/Shiki_Demo](https://vluv.space/shiki_highlight/); For changelog see, [CHANGELOG.md](./CHANGELOG.md)
 
 
 | <img width="1386" height="720" alt="image" src="https://github.com/user-attachments/assets/a7e7bc23-3d24-4f65-b9fc-1d7452fcf200" /> | <img width="1394" height="736" alt="image" src="https://github.com/user-attachments/assets/677ca7d3-2b76-4cb6-8392-2de07b2b4406" /> |
