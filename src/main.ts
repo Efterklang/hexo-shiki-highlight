@@ -1,60 +1,11 @@
 "use strict";
-import { bundledLanguages, createHighlighter, ShikiTransformer } from "shiki";
+import { bundledLanguages, createHighlighter } from "shiki";
 import type Hexo from "hexo";
 import { HighlightOptions } from "hexo/dist/extend/syntax_highlight";
 import { escapeHTML } from "hexo-util";
-import { readFileSync, createReadStream, read } from "fs";
+import { readFileSync, createReadStream } from "fs";
+import { processConfig, REGISTERED_TRANSFORMERS } from "./config";
 import { join } from "path";
-import {
-  transformerCompactLineOptions,
-  transformerMetaHighlight,
-  transformerMetaWordHighlight,
-  transformerNotationDiff,
-  transformerNotationErrorLevel,
-  transformerNotationFocus,
-  transformerNotationHighlight,
-  transformerNotationWordHighlight,
-  transformerRemoveLineBreak,
-  transformerRemoveNotationEscape,
-  transformerRenderWhitespace,
-} from "@shikijs/transformers";
-import { transformerColorizedBrackets } from '@shikijs/colorized-brackets'
-
-interface Config {
-  themes?: Record<string, string>;
-  exclude_languages?: string[];
-  language_aliases?: Record<string, string>;
-  enable_transformers?: boolean;
-  code_collapse?: {
-    enable?: boolean;
-    max_lines?: number;
-    show_lines?: number;
-  };
-  toolbar_items?: {
-    lang?: boolean;
-    title?: boolean;
-    wrapToggle?: boolean;
-    copyButton?: boolean;
-    shrinkButton?: boolean;
-  };
-  copy?: { success?: string; error?: string };
-  custom_css?: string;
-}
-
-const SUPPORTED_TRANSFORMERS: ShikiTransformer[] = [
-  transformerCompactLineOptions(),
-  transformerMetaHighlight(),
-  transformerMetaWordHighlight(),
-  transformerNotationDiff(),
-  transformerNotationErrorLevel(),
-  transformerNotationFocus(),
-  transformerNotationHighlight(),
-  transformerNotationWordHighlight(),
-  transformerRemoveLineBreak(),
-  transformerRemoveNotationEscape(),
-  transformerRenderWhitespace(),
-  transformerColorizedBrackets(),
-];
 
 function createShikiTools(lang: string, title: string, displayItems: any): string {
   const leftSection = `<div class="left">
@@ -90,16 +41,10 @@ function createShikiTools(lang: string, title: string, displayItems: any): strin
 
 
 export async function init(hexo: Hexo): Promise<void> {
-  const config = (hexo.config.shiki as Config) || {};
-  // 配置默认值
-  const defaultThemes = {
-    light: "catppuccin-latte",
-    dark: "catppuccin-mocha"
-  };
-  const themes = { ...defaultThemes, ...config.themes };
-  const excludes = config.exclude_languages || [];
-  const aliases = new Map(Object.entries(config.language_aliases || {}));
-  const enableTransformers = config.enable_transformers ?? true;
+  const {
+    themes, excludes, aliases, enableTransformers, toolbarItems,
+    customCSS, collapseConfig
+  } = processConfig(hexo);
 
   const highlighter = await createHighlighter({
     themes: Object.values(themes),
@@ -107,19 +52,11 @@ export async function init(hexo: Hexo): Promise<void> {
     langs: Object.keys(bundledLanguages),
   });
 
-  const toolbarItems = {
-    lang: config.toolbar_items?.lang ?? true,
-    title: config.toolbar_items?.title ?? true,
-    wrapToggle: config.toolbar_items?.wrapToggle ?? true,
-    copyButton: config.toolbar_items?.copyButton ?? true,
-    shrinkButton: config.toolbar_items?.shrinkButton ?? true,
-  };
-
   (global as any).hexo = hexo;
 
-  if (config.custom_css) {
+  if (customCSS) {
     hexo.extend.injector.register("head_end", () => {
-      return `<link rel="stylesheet" href="${hexo.config.root}${config.custom_css}">`;
+      return `<link rel="stylesheet" href="${hexo.config.root}${customCSS}">`;
     });
   } else {
     hexo.extend.generator.register("shiki_custom_css", () => {
@@ -146,7 +83,7 @@ export async function init(hexo: Hexo): Promise<void> {
     let code_html = highlighter.codeToHtml(code, {
       lang: options.lang || "",
       themes: themes,
-      transformers: enableTransformers ? SUPPORTED_TRANSFORMERS : []
+      transformers: enableTransformers ? REGISTERED_TRANSFORMERS : []
     });
     // rm inline-styles added by shiki
     code_html = code_html.replace(/<pre[^>]*>/, (match: string) =>
@@ -154,21 +91,16 @@ export async function init(hexo: Hexo): Promise<void> {
     );
     let shikiToolsHtml = createShikiTools(options.lang || "", options.caption || "", toolbarItems);
 
-    const collapseConfig = config.code_collapse || {};
-    const enableCollapse = collapseConfig.enable !== false;
-    const maxLines = collapseConfig.max_lines || 20;
-    const showLines = collapseConfig.show_lines || 10;
-
     let finalHighlightedHtml = code_html;
     let expandButton = '';
     let collapseAttributes = '';
 
-    if (enableCollapse) {
+    if (collapseConfig.enable !== false) {
       const codeLines = code_html.match(/<span class="line/g)?.length || 0;
 
-      if (codeLines > maxLines) {
+      if (codeLines > collapseConfig.maxLines) {
         expandButton = `<div class="code-expand-btn"><iconify-icon icon="garden:chevron-double-down-fill-16"></iconify-icon></div>`;
-        collapseAttributes = ` data-collapsible="true" data-max-lines="${maxLines}" data-show-lines="${showLines}" data-total-lines="${codeLines}"`;
+        collapseAttributes = ` data-collapsible="true" data-max-lines="${collapseConfig.maxLines}" data-show-lines="${collapseConfig.showLines}" data-total-lines="${codeLines}"`;
       }
     }
 
