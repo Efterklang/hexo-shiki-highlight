@@ -83,48 +83,30 @@ const FeatureHandlers = {
     const pre = figure?.querySelector(SELECTORS.preShiki);
     const code = pre?.querySelector('code');
 
-    if (!pre || !code) {
-      console.error('Required elements not found!');
-      return;
-    }
-
     const isWrapped = pre.style.whiteSpace === 'pre-wrap';
 
     if (isWrapped) {
-      this.disableWrap(pre, code, element);
+      Object.assign(pre.style, { whiteSpace: 'pre' });
+      Object.assign(code.style, {
+        whiteSpace: 'pre',
+        wordBreak: 'normal',
+        overflowWrap: 'normal'
+      });
+      element.classList.remove(CLASSES.wrapActive);
     } else {
-      this.enableWrap(pre, code, element);
+      Object.assign(pre.style, { whiteSpace: 'pre-wrap' });
+      Object.assign(code.style, {
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-all',
+        overflowWrap: 'anywhere'
+      });
+      element.classList.add(CLASSES.wrapActive);
     }
-  },
-
-  disableWrap(pre, code, element) {
-    Object.assign(pre.style, { whiteSpace: 'pre' });
-    Object.assign(code.style, {
-      whiteSpace: 'pre',
-      wordBreak: 'normal',
-      overflowWrap: 'normal'
-    });
-    element.classList.remove(CLASSES.wrapActive);
-  },
-
-  enableWrap(pre, code, element) {
-    Object.assign(pre.style, { whiteSpace: 'pre-wrap' });
-    Object.assign(code.style, {
-      whiteSpace: 'pre-wrap',
-      wordBreak: 'break-all',
-      overflowWrap: 'anywhere'
-    });
-    element.classList.add(CLASSES.wrapActive);
   },
 
   expandCode(figure) {
     const expandBtn = figure.querySelector(SELECTORS.expandBtn);
     const pre = figure.querySelector(SELECTORS.preShiki);
-
-    if (!expandBtn || !pre) {
-      console.error('Required elements for code expansion not found');
-      return;
-    }
 
     const isExpanded = figure.classList.contains('expanded');
     const showLines = parseInt(figure.dataset.showLines || '10');
@@ -182,6 +164,7 @@ const FeatureHandlers = {
     }
   }
 };// Main toolbar event handler
+
 function handleToolbarClick(event) {
   const target = event.target;
   const classList = target.classList;
@@ -189,7 +172,7 @@ function handleToolbarClick(event) {
   const handlers = {
     'expand': () => FeatureHandlers.shrink(this),
     'copy-button': () => FeatureHandlers.copy(this, target),
-    'fa-arrow-down-wide-short': () => FeatureHandlers.toggleWrap(this)
+    'toggle-wrap': () => FeatureHandlers.toggleWrap(this)
   };
 
   for (const [className, handler] of Object.entries(handlers)) {
@@ -219,6 +202,9 @@ function addHighlightTool() {
   if (!figures.length) return;
 
   figures.forEach(figure => {
+    if (figure.hasAttribute('data-shiki-initialized')) return;
+    figure.setAttribute('data-shiki-initialized', 'true');
+
     // Add event listener to existing shiki-tools
     const toolbar = figure.querySelector('.shiki-tools');
     if (toolbar) {
@@ -249,5 +235,10 @@ function addHighlightTool() {
   });
 }// Event listeners
 document.addEventListener('pjax:success', addHighlightTool);
-document.addEventListener('DOMContentLoaded', addHighlightTool);
 window.addEventListener('hexo-blog-decrypt', addHighlightTool);
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', addHighlightTool);
+} else {
+  addHighlightTool();
+}

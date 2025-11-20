@@ -137,7 +137,7 @@ export async function init(hexo: Hexo): Promise<void> {
       data: () => createReadStream(join(__dirname, "../code_block/shiki.js")),
     };
   });
-  hexo.extend.injector.register("body_end", () => `<script async src="${hexo.config.root}js/code_block/shiki.js"></script>`);
+  hexo.extend.injector.register("body_end", () => `<script defer src="${hexo.config.root}js/code_block/shiki.js"></script>`);
 
   const hexo_highlighter = (code: string, options: HighlightOptions) => {
     if (excludes.includes(options.lang || "")) {
