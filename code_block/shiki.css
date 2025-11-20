@@ -88,12 +88,12 @@ figure.shiki {
     display: flex;
     align-items: center;
 
-    >i {
+    >iconify-icon {
       cursor: pointer;
       transition: color 0.3s, transform 0.3s ease;
     }
 
-    >i:hover {
+    >iconify-icon:hover {
       color: var(--hl-tools-hover-color);
     }
   }
@@ -169,7 +169,7 @@ figure.shiki {
 
 .code-expand-btn {
   position: absolute;
-  bottom: 0;
+  bottom: 1rem;
   width: 100%;
   z-index: 1000;
   display: flex;
@@ -178,13 +178,13 @@ figure.shiki {
   font-size: 1em;
   cursor: pointer;
 
-  >i {
+  >iconify-icon {
     padding: 6px 0;
     animation: code-expand-pulse 1.2s infinite;
     transition: transform 0.3s ease;
   }
 
-  &.expand-done>i {
+  &.expand-done>iconify-icon {
     transform: rotate(180deg);
   }
 }

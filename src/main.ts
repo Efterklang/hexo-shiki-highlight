@@ -72,14 +72,14 @@ function createShikiTools(lang: string, title: string, displayItems: any): strin
 
   let rightButtons = '';
   if (displayItems.wrapToggle) {
-    rightButtons += '<i class="fa-solid fa-arrow-down-wide-short" title="Toggle Wrap"></i>';
+    rightButtons += '<iconify-icon icon="fa6-solid:arrow-down-wide-short" class="toggle-wrap" title="Toggle Wrap"></iconify-icon>';
   }
   if (displayItems.copyButton) {
-    rightButtons += '<div class="copy-notice"></div><i class="fas fa-paste copy-button"></i>';
+    rightButtons += '<div class="copy-notice"></div><iconify-icon icon="fa6-solid:paste" class="copy-button"></iconify-icon>';
   }
   if (displayItems.shrinkButton !== undefined) {
     const closedClass = displayItems.shrinkButton === false ? ' closed' : '';
-    rightButtons += `<i class="fas fa-angle-down expand${closedClass}"></i>`;
+    rightButtons += `<iconify-icon icon="fa6-solid:angle-down" class="expand${closedClass}"></iconify-icon>`;
   }
 
   const rightSection = `<div class="right">${rightButtons}</div>`;
@@ -167,7 +167,7 @@ export async function init(hexo: Hexo): Promise<void> {
       const codeLines = code_html.match(/<span class="line/g)?.length || 0;
 
       if (codeLines > maxLines) {
-        expandButton = `<div class="code-expand-btn"><i class="fas fa-angle-double-down"></i></div>`;
+        expandButton = `<div class="code-expand-btn"><iconify-icon icon="garden:chevron-double-down-fill-16"></iconify-icon></div>`;
         collapseAttributes = ` data-collapsible="true" data-max-lines="${maxLines}" data-show-lines="${showLines}" data-total-lines="${codeLines}"`;
       }
     }
