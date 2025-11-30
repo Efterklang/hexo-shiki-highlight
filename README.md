@@ -1,8 +1,3 @@
-<!-- Language switch: English / 中文 -->
-<p align="center">
-  <a href="README.md">English</a> · <a href="README-cn.md">中文</a>
-</p>
-
 ## Preview
 
 Dark & Light Theme
@@ -32,27 +27,84 @@ If you want to customize the highlighter, add a `shiki` section to `_config.yml`
 
 ```yaml
 shiki:
-  themes:
-    light: "catppuccin-latte"
-    dark: "catppuccin-mocha"
+  code_collapse:
+    enable: true # Enable code collapse feature. Default: true
+    max_lines: 20 # Max lines before collapsing. Default: 20
+    show_lines: 10 # Lines to show when collapsed. Default: 10
 
+  exclude_languages: ["mermaid"] # Languages excluded from Shiki highlighting
+  enable_transformers: true
+```
+
+### toolbar_items
+
+You can configure which items to show in the code block toolbar:
+
+```yaml
+shiki:
   toolbar_items:
     lang: true
     title: true
     wrapToggle: true
     copyButton: true
     shrinkButton: true # toggle code collapse/expand
-
-  code_collapse:
-    enable: true # Enable code collapse feature. Default: true
-    max_lines: 20 # Max lines before collapsing. Default: 20
-    show_lines: 10 # Lines to show when collapsed. Default: 10
-
-  # --- Advanced Settings ---
-  exclude_languages: ["mermaid"] # Languages excluded from Shiki highlighting
-  language_aliases: { "sh": "bash" }
-  enable_transformers: true
 ```
+
+### language_aliases
+
+This option allows you to define aliases for language names.
+
+For example, to map `conf` to `nginx` and `gitconfig` to `ini`, you can use:
+
+```yaml
+shiki:
+  language_aliases:
+    conf: nginx
+    gitconfig: ini
+```
+
+After this configuration, code blocks marked with `conf` or `gitconfig` will be highlighted using the `nginx` and `ini` syntax rules, respectively.
+
+### style_to_class transformer
+
+You can enable `style_to_class` to convert Shiki's inline styles into CSS classes. Example configuration:
+
+```yaml
+shiki:
+  style_to_class:
+    enable: true
+    class_prefix: _sk_
+```
+
+What this does:
+
+- When enabled, inline `style` attributes produced by Shiki are transformed into unique class names.
+- The class names are generated from a hash of the style object; use `class_prefix` to set a custom prefix for those class names.
+- A CSS file containing these generated class rules will be written to the `~/Download` directory.
+- You must add a link to the generated CSS in your blog (for example in your theme's head) to apply the styles.
+
+Here is an example of the difference in output
+
+```css
+/* without style_to_class */
+<span
+  style="
+    color: #d20f39;
+    --shiki-light-font-style: italic;
+    --shiki-dark: #f38ba8;
+    --shiki-dark-font-style: italic;
+    --shiki-tokyo: #c0caf5;
+    --shiki-tokyo-font-style: italic;
+  "
+>
+  Italic
+</span>
+
+/* with style_to_class */
+<span class="_sk_1a2b3c">Italic</span>
+```
+
+This feature can help reduce HTML size, improve caching, and make it easier to customize styles via CSS.
 
 ### Themes
 

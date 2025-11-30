@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.0] - 2025
+
+### Added
+
+- Support use custom css file to replace default styles.
+- Support `style_to_class` transformer to convert inline styles to CSS classes.
+
 ## [3.0.0] - 2025
 
 - Refactored CSS selectors: replaced descendant selectors (`A B`) with direct child selectors (`A > B`) to improve specificity and rendering performance.
