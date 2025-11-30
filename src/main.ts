@@ -84,7 +84,7 @@ export async function init(hexo: Hexo): Promise<void> {
     }
     let transformers = enableTransformers ? REGISTERED_TRANSFORMERS : [];
     if (styleToClass.enable) {
-      transformers = [toClass, ...transformers];
+      transformers = [...transformers, toClass];
     }
     let code_html = highlighter.codeToHtml(code, {
       lang: options.lang || "",
