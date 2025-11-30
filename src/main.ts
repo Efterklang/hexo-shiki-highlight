@@ -94,7 +94,11 @@ export async function init(hexo: Hexo): Promise<void> {
 
     if (styleToClass.enable) {
       const cssContent = toClass.getCSS();
-      writeFileSync(join(process.env.HOME || process.env.USERPROFILE || ".", "Downloads/shiki_style_to_class.css"), cssContent, "utf-8");
+      try {
+        writeFileSync(join(process.env.HOME || process.env.USERPROFILE || ".", "Downloads/shiki_style_to_class.css"), cssContent, "utf-8");
+      } catch (e) {
+        console.log("Ignore error: failed to write shiki_style_to_class.css");
+      }
     }
 
     // rm inline-styles added by shiki
