@@ -3,9 +3,10 @@ import { bundledLanguages, createHighlighter } from "shiki";
 import type Hexo from "hexo";
 import { HighlightOptions } from "hexo/dist/extend/syntax_highlight";
 import { escapeHTML } from "hexo-util";
-import { readFileSync, createReadStream } from "fs";
+import { readFileSync, createReadStream, writeFileSync, appendFile } from "fs";
 import { processConfig, REGISTERED_TRANSFORMERS } from "./config";
 import { join } from "path";
+import { transformerStyleToClass } from "@shikijs/transformers";
 
 function createShikiTools(lang: string, title: string, displayItems: any): string {
   const leftSection = `<div class="left">
@@ -42,7 +43,7 @@ function createShikiTools(lang: string, title: string, displayItems: any): strin
 
 export async function init(hexo: Hexo): Promise<void> {
   const {
-    themes, excludes, aliases, enableTransformers, toolbarItems,
+    themes, excludes, aliases, enableTransformers, styleToClass, toolbarItems,
     customCSS, collapseConfig
   } = processConfig(hexo);
 
@@ -76,15 +77,26 @@ export async function init(hexo: Hexo): Promise<void> {
   });
   hexo.extend.injector.register("body_end", () => `<script defer src="${hexo.config.root}js/code_block/shiki.js"></script>`);
 
+  const toClass = transformerStyleToClass({ classPrefix: styleToClass.classPrefix });
   const hexo_highlighter = (code: string, options: HighlightOptions) => {
     if (excludes.includes(options.lang || "")) {
       return `<pre><code class="${options.lang}">${escapeHTML(code)}</code></pre>`;
     }
+    let transformers = enableTransformers ? REGISTERED_TRANSFORMERS : [];
+    if (styleToClass.enable) {
+      transformers = [toClass, ...transformers];
+    }
     let code_html = highlighter.codeToHtml(code, {
       lang: options.lang || "",
       themes: themes,
-      transformers: enableTransformers ? REGISTERED_TRANSFORMERS : []
+      transformers: transformers
     });
+
+    if (styleToClass.enable) {
+      const cssContent = toClass.getCSS();
+      writeFileSync(join(process.env.HOME || process.env.USERPROFILE || ".", "Downloads/shiki_style_to_class.css"), cssContent, "utf-8");
+    }
+
     // rm inline-styles added by shiki
     code_html = code_html.replace(/<pre[^>]*>/, (match: string) =>
       match.replace(/\s*style\s*=\s*"[^"]*"\s*tabindex="0"/, "")

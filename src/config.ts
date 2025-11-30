@@ -21,6 +21,10 @@ interface Config {
     exclude_languages?: string[];
     language_aliases?: Record<string, string>;
     enable_transformers?: boolean;
+    style_to_class?: {
+        enable?: boolean;
+        class_prefix?: string;
+    };
     code_collapse?: {
         enable?: boolean;
         max_lines?: number;
@@ -65,6 +69,10 @@ export function processConfig(hexo: Hexo) {
         excludes: config.exclude_languages || [],
         aliases: new Map(Object.entries(config.language_aliases || {})),
         enableTransformers: config.enable_transformers ?? true,
+        styleToClass: {
+            enable: config.style_to_class?.enable ?? false,
+            classPrefix: config.style_to_class?.class_prefix || "shiki-",
+        },
         toolbarItems: {
             lang: config.toolbar_items?.lang ?? true,
             title: config.toolbar_items?.title ?? true,
